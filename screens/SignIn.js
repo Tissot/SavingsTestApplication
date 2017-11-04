@@ -76,7 +76,8 @@ export default class SignIn extends Component {
             />
             <TouchableOpacity
               style={{
-                marginBottom: 16
+                marginBottom: 16,
+                backgroundColor: 'transparent'
               }}
               activeOpacity={.8}
               onPress={() => this.props.navigation.navigate('EditInfo', { title: '手机号', buttonText: '获取验证码' })}
