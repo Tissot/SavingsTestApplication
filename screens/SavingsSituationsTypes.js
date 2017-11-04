@@ -79,9 +79,9 @@ export default class SavingsSituationsTypes extends Component {
   }
 
   async getSavingsSituationsTypes () {
-    this.setState({
+    this.setState((prevState, props) => ({
       refreshing: true
-    })
+    }))
 
     const [promise1, promise2] = await this.$JSONAjax.all([
       this.$JSONAjax({
@@ -96,7 +96,7 @@ export default class SavingsSituationsTypes extends Component {
     const response1 = promise1.data, response2 = promise2.data
 
     if (response1.statusCode === 100) {
-      this.setState({
+      this.setState((prevState, props) => ({
         savingsSituationsTypes: [
           {
             key: '0',
@@ -108,14 +108,15 @@ export default class SavingsSituationsTypes extends Component {
             ]
           }
         ]
-      })
+      }))
     }
 
     if (response2.statusCode === 100) {
-      this.setState({
+      this.setState((prevState, props) => ({
         group: response2.result.group
-      })
-      this.setState({
+      }))
+
+      this.setState((prevState, props) => ({
         savingsSituationsTypes: this.state.savingsSituationsTypes.concat(this.state.group === 0 && [
           {
             key: '1',
@@ -153,11 +154,11 @@ export default class SavingsSituationsTypes extends Component {
             data: ['每月储蓄情况', '历史储蓄情况']
           }
         ] || [])
-      })
+      }))
     }
 
-    this.setState({
+    this.setState((prevState, props) => ({
       refreshing: false
-    })
+    }))
   }
 }

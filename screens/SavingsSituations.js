@@ -77,9 +77,9 @@ export default class SavingsSituations extends Component {
   }
 
   async getSavingsSituations () {
-    this.setState({
+    this.setState((prevState, props) => ({
       refreshing: true
-    })
+    }))
 
     const { title, userId } = this.props.navigation.state.params
     const savingsSituationType = ['历史储蓄情况', '子女教育储蓄情况'].indexOf(title)
@@ -96,7 +96,7 @@ export default class SavingsSituations extends Component {
           data: response.result.eachMonthSavingsSituations[3]
         })
 
-        this.setState({
+        this.setState((prevState, props) => ({
           savingsSituations: [
             {
               key: '0',
@@ -118,7 +118,7 @@ export default class SavingsSituations extends Component {
               ]
             }
           ]
-        })
+        }))
       }
     } else if (savingsSituationType !== -1) {
       const response = (await this.$JSONAjax({
@@ -136,9 +136,9 @@ export default class SavingsSituations extends Component {
       }
   
       if (response.statusCode === 100) {
-        this.setState({
+        this.setState((prevState, props) => ({
           savingsSituations: response.result.historicalSavingsSituations
-        })
+        }))
       }
     } else if (title !== undefined && userId !== undefined) {
       const response = (await this.$JSONAjax({
@@ -150,7 +150,7 @@ export default class SavingsSituations extends Component {
       })).data
   
       if (response.statusCode === 100) {
-        this.setState({
+        this.setState((prevState, props) => ({
           savingsSituations: [
             {
               key: '0',
@@ -175,12 +175,12 @@ export default class SavingsSituations extends Component {
               ]
             }
           ]
-        })
+        }))
       }
     }
 
-    this.setState({
+    this.setState((prevState, props) => ({
       refreshing: false
-    })
+    }))
   }
 }

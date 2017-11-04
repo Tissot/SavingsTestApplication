@@ -114,9 +114,9 @@ export default class EditInfo extends Component {
         if (this.state.counter <= 0) {
           this.timer && clearInterval(this.timer)
         } else {
-          this.setState({
+          this.setState((prevState, props) => ({
             counter: --this.state.counter
-          })
+          }))
         }
       }, 1000)
     }

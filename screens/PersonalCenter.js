@@ -110,9 +110,9 @@ export default class PersonalCenter extends Component {
   }
 
   async getUserInfo () {
-    this.setState({
+    this.setState((prevState, props) => ({
       refreshing: true
-    })
+    }))
 
     const [promise1, promise2, promise3] = await this.$JSONAjax.all([
       this.$JSONAjax({
@@ -133,8 +133,8 @@ export default class PersonalCenter extends Component {
       this.refreshUserInfo(response1.result, response2.result.questionnaireURL, response3.result.advisoryPhone)
     }
 
-    this.setState({
+    this.setState((prevState, props) => ({
       refreshing: false
-    })
+    }))
   }
 }

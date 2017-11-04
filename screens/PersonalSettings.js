@@ -100,9 +100,9 @@ export default class PersonalSettings extends Component {
   }
 
   async getUserInfo () {
-    this.setState({
+    this.setState((prevState, props) => ({
       refreshing: true
-    })
+    }))
 
     const response = (await this.$JSONAjax({
       method: 'post',
@@ -112,7 +112,7 @@ export default class PersonalSettings extends Component {
     if (response.statusCode === 100) {
       const { avatar, nickname } = response.result
 
-      this.setState({
+      this.setState((prevState, props) => ({
         personalSettings: [
           {
             key: '0',
@@ -142,14 +142,14 @@ export default class PersonalSettings extends Component {
             ]
           }
         ]
-      })
+      }))
 
       this.props.navigation.state.params.refreshFunction(avatar, nickname)
     }
 
-    this.setState({
+    this.setState((prevState, props) => ({
       refreshing: false
-    })
+    }))
   }
 
   async handleSignOutResponse (response) {

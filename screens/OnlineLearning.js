@@ -67,21 +67,19 @@ export default class OnlineLearning extends Component {
             />
           )}
           ItemSeparatorComponent={ItemSeparatorComponent}
-          ListFooterComponent={() => (
+          ListFooterComponent={this.state.onlineContents.length > 0 ? () => (
             <View style={{
               paddingTop: this.$verticalSpacingDistance,
               paddingBottom: this.$verticalSpacingDistance,
               paddingLeft: this.$horizontalSpacingDistance,
               paddingRight: this.$horizontalSpacingDistance
             }}>
-              {
-                this.state.onlineContents.length > 0 && <CustomButton
-                  onPress={() => this.props.navigation.navigate('OnlineTest')}
-                  text='开始测验'
-                />
-              }
+              <CustomButton
+                onPress={() => this.props.navigation.navigate('OnlineTest')}
+                text='开始测验'
+              />
             </View>
-          )}
+          ) : undefined}
           refreshing={this.state.refreshing}
           onRefresh={() => this.getOnlineContents()}
         />
@@ -90,9 +88,9 @@ export default class OnlineLearning extends Component {
   }
 
   async getOnlineContents () {
-    this.setState({
+    this.setState((prevState, props) => ({
       refreshing: true
-    })
+    }))
 
     const response = (await this.$JSONAjax({
       method: 'post',
@@ -100,13 +98,13 @@ export default class OnlineLearning extends Component {
     })).data
 
     if (response.statusCode === 100) {
-      this.setState({
+      this.setState((prevState, props) => ({
         onlineContents: response.result.onlineContents
-      })
+      }))
     }
 
-    this.setState({
+    this.setState((prevState, props) => ({
       refreshing: false
-    })
+    }))
   }
 }

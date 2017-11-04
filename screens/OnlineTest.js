@@ -56,10 +56,10 @@ export default class OnlineTest extends Component {
                 color={this.$mainColor}
                 activeColor={this.$mainColor}
                 highlightColor='#fff'
-                onSelect = {(selectionIndex, value) => this.setState((preValue) => {
-                  preValue.selections.splice(index, 1, value)
+                onSelect = {(selectionIndex, value) => this.setState((prevState, props) => {
+                  prevState.selections.splice(index, 1, value)
 
-                  return { selections: preValue.selections }
+                  return { selections: prevState.selections }
                 })}
               >
                 {
@@ -72,21 +72,19 @@ export default class OnlineTest extends Component {
               </RadioGroup>
             </View>
           )}
-          ListFooterComponent={() => (
+          ListFooterComponent={this.state.questions.length > 0 ? () => (
             <View style={{
               paddingTop: this.$verticalSpacingDistance,
               paddingBottom: this.$verticalSpacingDistance,
               paddingLeft: this.$horizontalSpacingDistance,
               paddingRight: this.$horizontalSpacingDistance
             }}>
-            {
-              this.state.questions.length > 0 && <CustomButton
+               <CustomButton
                 onPress={() => this.checkAnswer()}
                 text='校对答案'
               />
-            }
             </View>
-          )}
+          ) : undefined}
           refreshing={this.state.refreshing}
           onRefresh={() => this.getQuestions()}
         />
@@ -101,9 +99,9 @@ export default class OnlineTest extends Component {
       selections.push(null)
     }
 
-    this.setState({
+    this.setState((prevState, props) => ({
       selections
-    })
+    }))
   }
 
   async checkAnswer () {
@@ -172,9 +170,9 @@ export default class OnlineTest extends Component {
   }
 
   async getQuestions () {
-    this.setState({
+    this.setState((prevState, props) => ({
       refreshing: true
-    })
+    }))
 
     const response = (await this.$JSONAjax({
       method: 'post',
@@ -182,16 +180,16 @@ export default class OnlineTest extends Component {
     })).data
 
     if (response.statusCode === 100) {
-      this.setState({
+      this.setState((prevState, props) => ({
         questions: response.result.questions
-      })
+      }))
 
       this.initSelections()
     }
 
-    this.setState({
+    this.setState((prevState, props) => ({
       refreshing: false
-    })
+    }))
   }
 }
 
