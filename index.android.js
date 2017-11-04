@@ -1,23 +1,9 @@
 'use strict'
 
-import React, { Component } from 'react'
-
 import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
+  AppRegistry
 } from 'react-native'
 
-export default class SavingsTestApplication extends Component {
-  render () {
-    return (
-      <Text>RN</Text>
-    )
-  }
-}
-
-const styles = StyleSheet.create({
-})
+import SavingsTestApplication from './SavingsTestApplication.js'
 
 AppRegistry.registerComponent('SavingsTestApplication', () => SavingsTestApplication)
