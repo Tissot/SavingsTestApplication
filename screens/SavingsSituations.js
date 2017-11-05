@@ -48,7 +48,9 @@ export default class SavingsSituations extends Component {
               refreshFunction: () => this.getSavingsSituations()
             }) : undefined}
           />}
-          renderSectionHeader={(({ section }) => <SectionHeaderComponent sectionHeaderText={(title === '历史储蓄情况' || title === '子女教育储蓄情况') && section.key || undefined} />)}
+          renderSectionHeader={(({ section }) => <SectionHeaderComponent
+            sectionHeaderText={(title === '历史储蓄情况' || title === '子女教育储蓄情况') && section.key || undefined}
+          />)}
           ListHeaderComponent={(group === 1 || group === 2) && (() => (
             <View style={{
               paddingTop: 20,
@@ -71,11 +73,6 @@ export default class SavingsSituations extends Component {
     )
   }
 
-  shouldComponentUpdate (newProps, newState) {
-    return true
-    // return newState.savingsSituations !== this.state.savingsSituations
-  }
-
   async getSavingsSituations () {
     this.setState((prevState, props) => ({
       refreshing: true
@@ -96,7 +93,7 @@ export default class SavingsSituations extends Component {
           data: response.result.eachMonthSavingsSituations[3]
         })
 
-        this.setState((prevState, props) => ({
+        this.setState({
           savingsSituations: [
             {
               key: '0',
@@ -118,7 +115,7 @@ export default class SavingsSituations extends Component {
               ]
             }
           ]
-        }))
+        })
       }
     } else if (savingsSituationType !== -1) {
       const response = (await this.$JSONAjax({
@@ -136,9 +133,9 @@ export default class SavingsSituations extends Component {
       }
   
       if (response.statusCode === 100) {
-        this.setState((prevState, props) => ({
+        this.setState({
           savingsSituations: response.result.historicalSavingsSituations
-        }))
+        })
       }
     } else if (title !== undefined && userId !== undefined) {
       const response = (await this.$JSONAjax({
@@ -150,7 +147,7 @@ export default class SavingsSituations extends Component {
       })).data
   
       if (response.statusCode === 100) {
-        this.setState((prevState, props) => ({
+        this.setState({
           savingsSituations: [
             {
               key: '0',
@@ -175,7 +172,7 @@ export default class SavingsSituations extends Component {
               ]
             }
           ]
-        }))
+        })
       }
     }
 

@@ -45,19 +45,20 @@ export default class SavingsSituationsTypes extends Component {
               onPress={item.key === undefined ? () => {
                   if (item === '每月储蓄情况' || item === '历史储蓄情况' || item === '子女教育储蓄情况') {
                     this.props.navigation.navigate('SavingsSituations', {
-                      title: item, group: item === '历史储蓄情况' ? this.state.group : undefined
+                      title: item,
+                      group: item === '历史储蓄情况' ? this.state.group : undefined
                     })
                   } else if (item === '同组成员储蓄情况') {
                     this.props.navigation.navigate('UserList', { title: item })
                   }
                 } : undefined
               }
-              itemIcon={item.key === '累计储蓄总额' && require('../assets/icons/Savings.png')
-                || item === '每月储蓄情况' && require('../assets/icons/ThisMonth.png')
-                || item === '历史储蓄情况' && require('../assets/icons/History.png')
-                || item === '同组成员储蓄情况' && require('../assets/icons/Friends.png')
-                || item === '子女教育储蓄情况' && require('../assets/icons/ChildrenEducation.png')
-                || undefined}
+              itemIcon={item.key === '累计储蓄总额' && require('../assets/icons/Savings.png') ||
+                item === '每月储蓄情况' && require('../assets/icons/ThisMonth.png') ||
+                item === '历史储蓄情况' && require('../assets/icons/History.png') ||
+                item === '同组成员储蓄情况' && require('../assets/icons/Friends.png') ||
+                item === '子女教育储蓄情况' && require('../assets/icons/ChildrenEducation.png') ||
+                undefined}
               itemKey={item.key || item}
               itemValue={item.key === '累计储蓄总额' ? item.value : undefined}
             />}
@@ -71,11 +72,6 @@ export default class SavingsSituationsTypes extends Component {
         }
       </View>
     )
-  }
-
-  shouldComponentUpdate (newProps, newState) {
-    return true
-    // return newState.savingsSituationsTypes !== this.state.savingsSituationsTypes
   }
 
   async getSavingsSituationsTypes () {
@@ -96,7 +92,7 @@ export default class SavingsSituationsTypes extends Component {
     const response1 = promise1.data, response2 = promise2.data
 
     if (response1.statusCode === 100) {
-      this.setState((prevState, props) => ({
+      this.setState({
         savingsSituationsTypes: [
           {
             key: '0',
@@ -108,7 +104,7 @@ export default class SavingsSituationsTypes extends Component {
             ]
           }
         ]
-      }))
+      })
     }
 
     if (response2.statusCode === 100) {
@@ -116,7 +112,7 @@ export default class SavingsSituationsTypes extends Component {
         group: response2.result.group
       }))
 
-      this.setState((prevState, props) => ({
+      this.setState({
         savingsSituationsTypes: this.state.savingsSituationsTypes.concat(this.state.group === 0 && [
           {
             key: '1',
@@ -154,7 +150,7 @@ export default class SavingsSituationsTypes extends Component {
             data: ['每月储蓄情况', '历史储蓄情况']
           }
         ] || [])
-      }))
+      })
     }
 
     this.setState((prevState, props) => ({

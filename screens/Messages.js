@@ -100,6 +100,28 @@ export default class Messages extends Component {
     )
   }
 
+  shouldComponentUpdate (newProps, newState) {
+    if (this.props.screenProps.hasPassedTheExam !== newProps.screenProps.hasPassedTheExam) {
+       return true
+    }
+    
+    if (this.state.refreshing !== newState.refreshing) {
+      return true
+    }
+
+    if (this.state.messages.length !== newState.messages.length) {
+      return true
+    } else {
+      for (let i = 0; i < this.state.messages.length; ++i) {
+        if (this.state.messages[i]._id !== newState.messages[i]._id) {
+          return true
+        }
+      }
+
+      return false
+    }
+  }
+
   async getMessages () {
     const response = (await this.$JSONAjax({
       method: 'post',

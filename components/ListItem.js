@@ -18,7 +18,6 @@ export default class CustomListItem extends Component {
 
   render () {
     return (
-      // 这里曾尝试把 TouchableHighlight 提取成一个定制的复用组件，但颜色切换会很卡。
       <TouchableHighlight underlayColor={this.$listUnderColor} onPress={this.props.onPress}>
         <View style={[
           styles.listItemContainer,

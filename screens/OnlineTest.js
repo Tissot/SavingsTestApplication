@@ -9,7 +9,6 @@ import {
   StyleSheet
 } from 'react-native'
 
-import { NavigationActions } from 'react-navigation'
 import { RadioGroup, RadioButton } from 'react-native-flexi-radio-button'
 
 import CustomButton from '../components/CustomButton.js'
@@ -92,6 +91,28 @@ export default class OnlineTest extends Component {
     )
   }
 
+  shouldComponentUpdate (newProps, newState) {
+    if (this.state.refreshing !== newState.refreshing) {
+      return true
+    }
+
+    if (this.state.questions.length !== newState.questions.length) {
+      return true
+    } else {
+      for (let i = 0; i < this.state.questions.length; ++i) {
+        if (this.state.questions[i]._id !== newState.questions[i]._id) {
+          return true
+        }
+      }
+      
+      return false
+    }
+  }
+
+  shouldComponentUpdate (newProps, newState) {
+    return this.state.refreshing !== newState.refreshing
+  }
+
   initSelections () {
     let selections = []
     
@@ -99,9 +120,9 @@ export default class OnlineTest extends Component {
       selections.push(null)
     }
 
-    this.setState((prevState, props) => ({
+    this.setState({
       selections
-    }))
+    })
   }
 
   async checkAnswer () {
@@ -133,32 +154,10 @@ export default class OnlineTest extends Component {
       Alert.alert('校对答案', response.message, [
         {
           text: '确认',
-          onPress: () => this.props.navigation.dispatch(NavigationActions.reset({
-            index: 1,
-            actions: [
-              NavigationActions.navigate({
-                routeName: 'User'
-              }),
-              NavigationActions.navigate({
-                routeName: 'SavingsSituations',
-                params: { title: '每月储蓄情况' }
-              })
-            ]
-          }))
+          onPress: () => this.props.navigation.navigate('SavingsSituations', { title: '每月储蓄情况' })
         }
       ], {
-        onDismiss: () => this.props.navigation.dispatch(NavigationActions.reset({
-          index: 1,
-          actions: [
-            NavigationActions.navigate({
-              routeName: 'User'
-            }),
-            NavigationActions.navigate({
-              routeName: 'SavingsSituations',
-              params: { title: '每月储蓄情况' }
-            })
-          ]
-        }))
+        onDismiss: () => this.props.navigation.navigate('SavingsSituations', { title: '每月储蓄情况' })
       })
     } else {
       Alert.alert('校对答案', '未通过测试', [
@@ -180,9 +179,9 @@ export default class OnlineTest extends Component {
     })).data
 
     if (response.statusCode === 100) {
-      this.setState((prevState, props) => ({
+      this.setState({
         questions: response.result.questions
-      }))
+      })
 
       this.initSelections()
     }

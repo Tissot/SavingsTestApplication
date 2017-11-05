@@ -74,6 +74,24 @@ export default class UserList extends Component {
     )
   }
 
+  shouldComponentUpdate (newProps, newState) {
+    if (this.state.refreshing !== newState.refreshing) {
+      return true
+    }
+
+    if (this.state.users.length !== newState.users.length) {
+      return true
+    } else {
+      for (let i = 0; i < this.state.users.length; ++i) {
+        if (this.state.users[i]._id !== newState.users[i]._id) {
+          return true
+        }
+      }
+      
+      return false
+    }
+  }
+
   async getUsers () {
     const response = (await this.$JSONAjax({
       method: 'post',

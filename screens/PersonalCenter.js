@@ -15,7 +15,48 @@ export default class PersonalCenter extends Component {
     super(props)
     this.state = {
       refreshing: false,
-      listItems: []
+
+      listItems: [
+        {
+          key: '0',
+          data: [
+            {
+              avatar: 'https://mardan.top/avatar/female.jpeg',
+              nickname: 'null'
+            }
+          ]
+        },
+        // {
+        //   key: '1',
+        //   data: [
+        //     {
+        //       key: '积分兑换',
+        //       icon: require('../assets/icons/Points.png'),
+        //       value: 0
+        //     }
+        //   ]
+        // },
+        {
+          key: '2',
+          data: [
+            {
+              key: '问卷调查',
+              icon: require('../assets/icons/Questionaire.png'),
+              questionnaireURL: ''
+            }
+          ]
+        },
+        {
+          key: '3',
+          data: [
+            {
+              key: '咨询电话',
+              icon: require('../assets/icons/AdvisoryPhone.png'),
+              value: ''
+            }
+          ]
+        }
+      ]
     }
   }
 
@@ -63,6 +104,14 @@ export default class PersonalCenter extends Component {
     )
   }
 
+  shouldComponentUpdate (newProps, newState) {
+    return this.state.refreshing !== newState.refreshing ||
+    this.state.listItems[0].data[0].avatar !== newState.listItems[0].data[0].avatar ||
+    this.state.listItems[0].data[0].nickname !== newState.listItems[0].data[0].nickname ||
+    this.state.listItems[1].data[0].questionnaireURL !== newState.listItems[1].data[0].questionnaireURL ||
+    this.state.listItems[2].data[0].value !== newState.listItems[2].data[0].value
+  }
+
   refreshUserInfo ({ avatar, nickname }, questionnaireURL, advisoryPhone) {
     this.setState((prevState, props) => ({
       listItems: [
@@ -81,7 +130,7 @@ export default class PersonalCenter extends Component {
         //     {
         //       key: '积分兑换',
         //       icon: require('../assets/icons/Points.png'),
-        //       value: 1000
+        //       value: 0
         //     }
         //   ]
         // },

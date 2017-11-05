@@ -87,6 +87,24 @@ export default class OnlineLearning extends Component {
     )
   }
 
+  shouldComponentUpdate (newProps, newState) {
+    if (this.state.refreshing !== newState.refreshing) {
+      return true
+    }
+
+    if (this.state.onlineContents.length !== newState.onlineContents.length) {
+      return true
+    } else {
+      for (let i = 0; i < this.state.onlineContents.length; ++i) {
+        if (this.state.onlineContents[i]._id !== newState.onlineContents[i]._id) {
+          return true
+        }
+      }
+
+      return false
+    }
+  }
+
   async getOnlineContents () {
     this.setState((prevState, props) => ({
       refreshing: true
@@ -98,9 +116,9 @@ export default class OnlineLearning extends Component {
     })).data
 
     if (response.statusCode === 100) {
-      this.setState((prevState, props) => ({
+      this.setState({
         onlineContents: response.result.onlineContents
-      }))
+      })
     }
 
     this.setState((prevState, props) => ({

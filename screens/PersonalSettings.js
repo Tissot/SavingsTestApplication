@@ -19,7 +19,35 @@ export default class PersonalSettings extends Component {
     super(props)
     this.state = {
       refreshing: false,
-      personalSettings: []
+      personalSettings: [
+        {
+          key: '0',
+          data: [
+            {
+              key: '头像',
+              value: 'https://mardan.top/avatar/female.jpeg'
+            }
+          ]
+        },
+        {
+          key: '1',
+          data: [
+            {
+              key: '昵称',
+              value: 'null'
+            }
+          ]
+        },
+        {
+          key: '2',
+          data: [
+            {
+              key: '密码',
+              value: '********'
+            }
+          ]
+        }
+      ]
     }
   }
 
@@ -95,27 +123,32 @@ export default class PersonalSettings extends Component {
             <View style={{ height: this.$verticalSpacingDistance }}></View>
           )}
           ItemSeparatorComponent={ItemSeparatorComponent}
-          ListFooterComponent={() => (
+          ListFooterComponent={this.state.personalSettings.length > 0 ? () => (
             <View style={{
               paddingTop: this.$verticalSpacingDistance,
               paddingBottom: this.$verticalSpacingDistance,
               paddingLeft: this.$horizontalSpacingDistance,
               paddingRight: this.$horizontalSpacingDistance
             }}>
-              {
-                this.state.personalSettings.length > 0 && <CustomButton
-                  backgroundColor='red'
-                  onPress={() => this.signOut()}
-                  text='退出登录'
-                />
-              }
+              <CustomButton
+                backgroundColor='red'
+                onPress={() => this.signOut()}
+                text='退出登录'
+              />
             </View>
-          )}
+          ) : undefined}
           refreshing={this.state.refreshing}
           onRefresh={() => this.getUserInfo()}
         />
       </View>
     )
+  }
+
+  shouldComponentUpdate (newProps, newState) {
+    return this.state.refreshing !== newState.refreshing ||
+    this.state.personalSettings[0].data[0].value !== newState.personalSettings[0].data[0].value ||
+    this.state.personalSettings[1].data[0].value !== newState.personalSettings[1].data[0].value ||
+    this.state.personalSettings[2].data[0].value !== newState.personalSettings[2].data[0].value
   }
 
   async getUserInfo () {
@@ -131,7 +164,7 @@ export default class PersonalSettings extends Component {
     if (response.statusCode === 100) {
       const { avatar, nickname } = response.result
 
-      this.setState((prevState, props) => ({
+      this.setState({
         personalSettings: [
           {
             key: '0',
@@ -161,7 +194,7 @@ export default class PersonalSettings extends Component {
             ]
           }
         ]
-      }))
+      })
 
       this.props.navigation.state.params.refreshFunction(avatar, nickname)
     }

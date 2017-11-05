@@ -4,11 +4,9 @@ import React, { Component } from 'react'
 import {
   ScrollView,
   StatusBar,
-  View,
+  KeyboardAvoidingView,
   Alert
 } from 'react-native'
-
-import { NavigationActions } from 'react-navigation'
 
 import CustomButton from '../components/CustomButton.js'
 import CustomTextInput from '../components/CustomTextInput.js'
@@ -52,7 +50,7 @@ export default class EditInfo extends Component {
           barStyle='light-content'
           backgroundColor={this.$OS === 'android' ? this.$mainColor : undefined} // android
         />
-        <View style={{
+        <KeyboardAvoidingView behavior='padding' style={{
           flexDirection: 'row'
         }}>
           <CustomTextInput
@@ -77,13 +75,17 @@ export default class EditInfo extends Component {
               text={this.state.counter === 0 ? '重新获取' : `${this.state.counter}s`}
             />
           }
-        </View>
+        </KeyboardAvoidingView>
         <CustomButton
           onPress={() => this.finishEdit()}
           text={buttonText || '完成'}
         />
       </ScrollView>
     )
+  }
+
+  shouldComponentUpdate (newProps, newState) {
+    return this.state.counter !== newState.counter
   }
 
   componentWillUnmount() {
@@ -179,15 +181,16 @@ export default class EditInfo extends Component {
   }
 
   async handleFinishEditResponse (response) {
-    const { goBackKey, refreshFunction } = this.props.navigation.state.params
+    const { title, goBackKey, refreshFunction } = this.props.navigation.state.params
     if (response !== undefined) {
       if (response.statusCode === 100) {
         refreshFunction !== undefined && refreshFunction()
         goBackKey === undefined ? this.props.navigation.goBack() : this.props.navigation.goBack(goBackKey)
+      } else if (response.statusCode === 101 && title === '每月期望储蓄额') {
+        this.props.navigation.goBack()
       }
     } else {
-      // 改成导航到每月期望储蓄额
-      this.props.navigation.goBack()
+      this.props.navigation.navigate('SavingsSituations', { title: '每月储蓄情况' })
     }
   }
 

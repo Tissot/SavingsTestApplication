@@ -13,8 +13,7 @@ export default class CustomInput extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      mainColor: this.props.theme === 'dark' ? '#000' : '#fff',
-      onFocus: false
+      mainColor: this.props.theme === 'dark' ? '#000' : '#fff'
     }
   }
 
