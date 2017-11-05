@@ -52,6 +52,25 @@ export default class PersonalSettings extends Component {
                         includeBase64: true,
                         mediaType: 'photo'
                       })
+
+                      let data = new FormData()
+                      data.append('avatar', image.data)
+
+                      const response = (await this.$formDataAjax({
+                        method: 'post',
+                        url: '/user/editAvatar',
+                        data
+                      })).data
+
+                      if (response.statusCode === 100) {
+                        this.getUserInfo()
+                      }
+
+                      Alert.alert('修改头像', response.message, [
+                        {
+                          text: '确认'
+                        }
+                      ])
                     } catch (error) {
                     }
                   } else if (item.key === '昵称') {
