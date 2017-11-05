@@ -91,7 +91,7 @@ export default class PersonalCenter extends Component {
             {
               key: '问卷调查',
               icon: require('../assets/icons/Questionaire.png'),
-              questionnaireURL: questionnaireURL || prevState.questionnaireURL
+              questionnaireURL: questionnaireURL || prevState.listItems[1].data[0].questionnaireURL
             }
           ]
         },
@@ -101,7 +101,7 @@ export default class PersonalCenter extends Component {
             {
               key: '咨询电话',
               icon: require('../assets/icons/AdvisoryPhone.png'),
-              value: advisoryPhone || prevState.advisoryPhone
+              value: advisoryPhone || prevState.listItems[2].data[0].value
             }
           ]
         }
