@@ -74,87 +74,79 @@ export default class SavingsSituationsTypes extends Component {
     )
   }
 
-  async getSavingsSituationsTypes () {
-    this.setState((prevState, props) => ({
-      refreshing: true
-    }))
-
-    const [promise1, promise2] = await this.$JSONAjax.all([
-      this.$JSONAjax({
-        method: 'post',
-        url: '/savingsSituation/getTotalSavings'
-      }), this.$JSONAjax({
-        method: 'post',
-        url: '/savingsSituation/getSavingsSituationsTypes'
-      })
-    ])
-
-    const response1 = promise1.data, response2 = promise2.data
-
-    if (response1.statusCode === 100) {
-      this.setState({
-        savingsSituationsTypes: [
-          {
-            key: '0',
-            data: [
-              {
-                key: '累计储蓄总额',
-                value: response1.result.totalSavings
-              }
-            ]
-          }
-        ]
-      })
-    }
-
-    if (response2.statusCode === 100) {
-      this.setState((prevState, props) => ({
-        group: response2.result.group
-      }))
-
-      this.setState({
-        savingsSituationsTypes: this.state.savingsSituationsTypes.concat(this.state.group === 0 && [
-          {
-            key: '1',
-            data: ['每月储蓄情况', '历史储蓄情况']
-          },
-          {
-            key: '2',
-            data: ['同组成员储蓄情况']
-          }
-        ] || this.state.group === 1 && [
-          {
-            key: '1',
-            data: ['每月储蓄情况', '历史储蓄情况']
-          },
-          {
-            key: '2',
-            data: ['子女教育储蓄情况']
-          }
-        ] || this.state.group === 2 && [
-          {
-            key: '1',
-            data: ['每月储蓄情况', '历史储蓄情况']
-          },
-          {
-            key: '2',
-            data: ['同组成员储蓄情况']
-          },
-          {
-            key: '3',
-            data: ['子女教育储蓄情况']
-          }
-        ] || this.state.group === 3 && [
-          {
-            key: '1',
-            data: ['每月储蓄情况', '历史储蓄情况']
-          }
-        ] || [])
-      })
-    }
-
-    this.setState((prevState, props) => ({
-      refreshing: false
-    }))
+  getSavingsSituationsTypes () {
+    this.setState({ refreshing: true }, async () => {
+      const [promise1, promise2] = await this.$JSONAjax.all([
+        this.$JSONAjax({
+          method: 'post',
+          url: '/savingsSituation/getTotalSavings'
+        }), this.$JSONAjax({
+          method: 'post',
+          url: '/savingsSituation/getSavingsSituationsTypes'
+        })
+      ])
+  
+      const response1 = promise1.data, response2 = promise2.data
+  
+      if (response1.statusCode === 100) {
+        this.setState({
+          savingsSituationsTypes: [
+            {
+              key: '0',
+              data: [
+                {
+                  key: '累计储蓄总额',
+                  value: response1.result.totalSavings
+                }
+              ]
+            }
+          ]
+        })
+      }
+  
+      if (response2.statusCode === 100) {
+        this.setState({ group: response2.result.group }, () => this.setState({
+          savingsSituationsTypes: this.state.savingsSituationsTypes.concat(this.state.group === 0 && [
+            {
+              key: '1',
+              data: ['每月储蓄情况', '历史储蓄情况']
+            },
+            {
+              key: '2',
+              data: ['同组成员储蓄情况']
+            }
+          ] || this.state.group === 1 && [
+            {
+              key: '1',
+              data: ['每月储蓄情况', '历史储蓄情况']
+            },
+            {
+              key: '2',
+              data: ['子女教育储蓄情况']
+            }
+          ] || this.state.group === 2 && [
+            {
+              key: '1',
+              data: ['每月储蓄情况', '历史储蓄情况']
+            },
+            {
+              key: '2',
+              data: ['同组成员储蓄情况']
+            },
+            {
+              key: '3',
+              data: ['子女教育储蓄情况']
+            }
+          ] || this.state.group === 3 && [
+            {
+              key: '1',
+              data: ['每月储蓄情况', '历史储蓄情况']
+            }
+          ] || [])
+        }))
+      }
+  
+      this.setState({ refreshing: false })
+    })
   }
 }

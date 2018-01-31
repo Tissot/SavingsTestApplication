@@ -114,16 +114,6 @@ export default class PersonalCenter extends Component {
             }
           ]
         },
-        // {
-        //   key: '1',
-        //   data: [
-        //     {
-        //       key: '积分兑换',
-        //       icon: require('../assets/icons/Points.png'),
-        //       value: 0
-        //     }
-        //   ]
-        // },
         {
           key: '2',
           data: [
@@ -148,32 +138,28 @@ export default class PersonalCenter extends Component {
     }))
   }
 
-  async getUserInfo () {
-    this.setState((prevState, props) => ({
-      refreshing: true
-    }))
-
-    const [promise1, promise2, promise3] = await this.$JSONAjax.all([
-      this.$JSONAjax({
-        method: 'post',
-        url: '/user/getUserInfo'
-      }), this.$JSONAjax({
-        method: 'post',
-        url: '/user/getQuestionnaireURL'
-      }), this.$JSONAjax({
-        method: 'post',
-        url: '/user/getAdvisoryPhone'
-      })
-    ])
-
-    const response1 = promise1.data, response2 = promise2.data, response3 = promise3.data
-
-    if (response1.statusCode === 100 && response2.statusCode === 100 && response3.statusCode === 100) {
-      this.refreshUserInfo(response1.result, response2.result.questionnaireURL, response3.result.advisoryPhone)
-    }
-
-    this.setState((prevState, props) => ({
-      refreshing: false
-    }))
+  getUserInfo () {
+    this.setState({ refreshing: true }, async () => {
+      const [promise1, promise2, promise3] = await this.$JSONAjax.all([
+        this.$JSONAjax({
+          method: 'post',
+          url: '/user/getUserInfo'
+        }), this.$JSONAjax({
+          method: 'post',
+          url: '/user/getQuestionnaireURL'
+        }), this.$JSONAjax({
+          method: 'post',
+          url: '/user/getAdvisoryPhone'
+        })
+      ])
+  
+      const response1 = promise1.data, response2 = promise2.data, response3 = promise3.data
+  
+      if (response1.statusCode === 100 && response2.statusCode === 100 && response3.statusCode === 100) {
+        this.refreshUserInfo(response1.result, response2.result.questionnaireURL, response3.result.advisoryPhone)
+      }
+  
+      this.setState({ refreshing: false })
+    })
   }
 }

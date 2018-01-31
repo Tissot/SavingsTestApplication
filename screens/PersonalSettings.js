@@ -151,57 +151,53 @@ export default class PersonalSettings extends Component {
     this.state.personalSettings[2].data[0].value !== newState.personalSettings[2].data[0].value
   }
 
-  async getUserInfo () {
-    this.setState((prevState, props) => ({
-      refreshing: true
-    }))
-
-    const response = (await this.$JSONAjax({
-      method: 'post',
-      url: '/user/getUserInfo'
-    })).data
-
-    if (response.statusCode === 100) {
-      const { avatar, nickname } = response.result
-
-      this.setState({
-        personalSettings: [
-          {
-            key: '0',
-            data: [
-              {
-                key: '头像',
-                value: avatar
-              }
-            ]
-          },
-          {
-            key: '1',
-            data: [
-              {
-                key: '昵称',
-                value: nickname
-              }
-            ]
-          },
-          {
-            key: '2',
-            data: [
-              {
-                key: '密码',
-                value: '********'
-              }
-            ]
-          }
-        ]
-      })
-
-      this.props.navigation.state.params.refreshFunction(avatar, nickname)
-    }
-
-    this.setState((prevState, props) => ({
-      refreshing: false
-    }))
+  getUserInfo () {
+    this.setState({ refreshing: true }, async () => {
+      const response = (await this.$JSONAjax({
+        method: 'post',
+        url: '/user/getUserInfo'
+      })).data
+  
+      if (response.statusCode === 100) {
+        const { avatar, nickname } = response.result
+  
+        this.setState({
+          personalSettings: [
+            {
+              key: '0',
+              data: [
+                {
+                  key: '头像',
+                  value: avatar
+                }
+              ]
+            },
+            {
+              key: '1',
+              data: [
+                {
+                  key: '昵称',
+                  value: nickname
+                }
+              ]
+            },
+            {
+              key: '2',
+              data: [
+                {
+                  key: '密码',
+                  value: '********'
+                }
+              ]
+            }
+          ]
+        })
+  
+        this.props.navigation.state.params.refreshFunction(avatar, nickname)
+      }
+  
+      this.setState({ refreshing: false })
+    })
   }
 
   async handleSignOutResponse (response) {

@@ -15,7 +15,7 @@ export default class EditInfo extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      counter: 60,
+      counter: 0,
       info: this.props.navigation.state.params.defaultValue
     }
   }
@@ -61,7 +61,7 @@ export default class EditInfo extends Component {
             returnKeyType='done'
             defaultValue={defaultValue}
             autoFocus={true}
-            onChangeText={(info) => this.setState({ info: info })}
+            onChangeText={info => this.setState({ info })}
             onSubmitEditing={() => this.finishEdit()}
             style={{
               flex: 1,
@@ -101,26 +101,18 @@ export default class EditInfo extends Component {
       }
     })).data
 
-    Alert.alert('获取手机验证码', response.message, [
-      {
-        text: '确认'
-      }
-    ])
+    Alert.alert('获取手机验证码', response.message, [{ text: '确认' }])
 
     if (response.statusCode === 100) {
-      this.setState((prevState, props) => ({
-        counter: 60
-      }))
-
-      this.timer = setInterval(() => {
-        if (this.state.counter <= 0) {
-          this.timer && clearInterval(this.timer)
-        } else {
-          this.setState((prevState, props) => ({
-            counter: prevState.counter - 1
-          }))
-        }
-      }, 1000)
+      this.setState({ counter: 60 }, () => {
+        this.timer = setInterval(() => {
+          if (this.state.counter <= 0) {
+            this.timer && clearInterval(this.timer)
+          } else {
+            this.setState((prevState, props) => ({ counter: prevState.counter - 1 }))
+          }
+        }, 1000)
+      })
     }
   }
 

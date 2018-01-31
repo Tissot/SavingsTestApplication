@@ -120,9 +120,7 @@ export default class OnlineTest extends Component {
       selections.push(null)
     }
 
-    this.setState({
-      selections
-    })
+    this.setState({ selections })
   }
 
   async checkAnswer () {
@@ -160,35 +158,25 @@ export default class OnlineTest extends Component {
         onDismiss: () => this.props.navigation.navigate('SavingsSituations', { title: '每月储蓄情况' })
       })
     } else {
-      Alert.alert('校对答案', '未通过测试', [
-        {
-          text: '确认'
-        }
-      ])
+      Alert.alert('校对答案', '未通过测试', [{ text: '确认' }])
     }
   }
 
-  async getQuestions () {
-    this.setState((prevState, props) => ({
-      refreshing: true
-    }))
-
-    const response = (await this.$JSONAjax({
-      method: 'post',
-      url: '/question/getQuestions'
-    })).data
-
-    if (response.statusCode === 100) {
-      this.setState({
-        questions: response.result.questions
-      })
-
-      this.initSelections()
-    }
-
-    this.setState((prevState, props) => ({
-      refreshing: false
-    }))
+  getQuestions () {
+    this.setState({ refreshing: true }, async () => {
+      const response = (await this.$JSONAjax({
+        method: 'post',
+        url: '/question/getQuestions'
+      })).data
+  
+      if (response.statusCode === 100) {
+        this.setState({ questions: response.result.questions })
+  
+        this.initSelections()
+      }
+  
+      this.setState({ refreshing: false })
+    })
   }
 }
 

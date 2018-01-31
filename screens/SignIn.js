@@ -57,7 +57,7 @@ export default class SignIn extends Component {
               keyboardType='phone-pad'
               placeholder='手机'
               returnKeyType='next'
-              onChangeText={(mobilePhone) => this.setState({ mobilePhone: mobilePhone })}
+              onChangeText={(mobilePhone) => this.setState({ mobilePhone })}
               onSubmitEditing={() => this.passwordInput.focus()}
             />
             <CustomTextInput
@@ -67,7 +67,7 @@ export default class SignIn extends Component {
               theme='light'
               placeholder='密码'
               returnKeyType='done'
-              onChangeText={(password) => this.setState({ password: password })}
+              onChangeText={(password) => this.setState({ password })}
               onSubmitEditing={() => this.signIn()}
             />
             <TouchableOpacity

@@ -105,24 +105,18 @@ export default class OnlineLearning extends Component {
     }
   }
 
-  async getOnlineContents () {
-    this.setState((prevState, props) => ({
-      refreshing: true
-    }))
+  getOnlineContents () {
+    this.setState({ refreshing: true }, async () => {
+      const response = (await this.$JSONAjax({
+        method: 'post',
+        url: '/onlineContent/getOnlineContents'
+      })).data
+  
+      if (response.statusCode === 100) {
+        this.setState({ onlineContents: response.result.onlineContents })
+      }
 
-    const response = (await this.$JSONAjax({
-      method: 'post',
-      url: '/onlineContent/getOnlineContents'
-    })).data
-
-    if (response.statusCode === 100) {
-      this.setState({
-        onlineContents: response.result.onlineContents
-      })
-    }
-
-    this.setState((prevState, props) => ({
-      refreshing: false
-    }))
+      this.setState({ refreshing: false })
+    })
   }
 }

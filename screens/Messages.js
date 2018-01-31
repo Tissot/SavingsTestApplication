@@ -138,23 +138,19 @@ export default class Messages extends Component {
         messages: prevState.messages.concat(response.result.messages)
       }))
 
-      await this.props.screenProps.checkHasNewMessages()
+      this.props.screenProps.checkHasNewMessages()
     }
   }
 
-  async refresh () {
-    // 此处如果不用 async await ，就算 setState() 用了函数形式，state 仍然不会立即更新。
-    await this.setState((prevState, props) => ({
+  refresh () {
+    this.setState({
       refreshing: true,
       startNum: 0,
       messages: []
-    }))
-
-    await this.getMessages()
-
-    this.setState((prevState, props) => ({
-      refreshing: false
-    }))
+    }, async () => {
+      await this.getMessages()
+      this.setState({ refreshing: false })
+    })
   }
 
   async readMessage (_id) {
@@ -167,13 +163,7 @@ export default class Messages extends Component {
     })).data
 
     if (response.statusCode === 100) {
-      // 此处如果不用 async await ，就算 setState() 用了函数形式，state 仍然不会立即更新。
-      await this.setState((prevState, props) => ({
-        startNum: 0,
-        messages: []
-      }))
-
-      this.getMessages()
+      this.refresh()
     }
   }
 }

@@ -234,9 +234,7 @@ export default class SavingsTestApplication extends Component {
       url: '/message/hasNewMessages'
     })).data
     
-    this.setState((prevState, props) => ({
-      hasNewMessages: response.result.hasNewMessages
-    }))
+    this.setState({ hasNewMessages: response.result.hasNewMessages })
   }
 
   async getHasPassedTheExam () {
@@ -247,8 +245,6 @@ export default class SavingsTestApplication extends Component {
     
     const { hasPassedTheExam } = response.result
 
-    this.setState((prevState, props) => ({
-      hasPassedTheExam
-    }))
+    this.setState({ hasPassedTheExam })
   }
 }

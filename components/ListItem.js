@@ -11,7 +11,7 @@ import {
 
 import PropTypes from 'prop-types'
 
-export default class CustomListItem extends Component {
+export default class ListItem extends Component {
   constructor (props) {
     super(props)
   }
@@ -65,7 +65,7 @@ export default class CustomListItem extends Component {
   }
 }
 
-CustomListItem.propTypes = {
+ListItem.propTypes = {
   onPress: PropTypes.func,
   itemIcon: PropTypes.oneOfType([
     PropTypes.string,
@@ -81,7 +81,7 @@ CustomListItem.propTypes = {
   ])
 }
 
-CustomListItem.defaultProps = {
+ListItem.defaultProps = {
   marginRight: 0,
   iconSize: 24,
   valueType: 'text'

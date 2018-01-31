@@ -111,18 +111,14 @@ export default class UserList extends Component {
     }
   }
 
-  async refresh () {
-    // 此处如果不用 async await ，就算 setState() 用了函数形式，state 仍然不会立即更新。
-    await this.setState((prevState, props) => ({
+  refresh () {
+    this.setState({
       refreshing: true,
       startNum: 0,
       users: []
-    }))
-
-    await this.getUsers()
-
-    this.setState((prevState, props) => ({
-      refreshing: false
-    }))
+    }, async () => {
+      await this.getUsers()
+      this.setState({ refreshing: false })
+    })
   }
 }
