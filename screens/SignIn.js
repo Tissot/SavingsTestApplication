@@ -14,8 +14,10 @@ import {
 
 import { NavigationActions } from 'react-navigation'
 
-import CustomButton from '../components/CustomButton.js'
-import CustomTextInput from '../components/CustomTextInput.js'
+import {
+  CustomButton,
+  CustomTextInput
+} from '../components'
 
 export default class SignIn extends Component {
   constructor (props) {

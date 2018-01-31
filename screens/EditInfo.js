@@ -8,8 +8,11 @@ import {
   Alert
 } from 'react-native'
 
-import CustomButton from '../components/CustomButton.js'
-import CustomTextInput from '../components/CustomTextInput.js'
+import {
+  CustomButton,
+  CustomTextInput
+} from '../components'
+
 
 export default class EditInfo extends Component {
   constructor (props) {

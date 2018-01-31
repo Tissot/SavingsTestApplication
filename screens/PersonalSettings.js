@@ -10,9 +10,11 @@ import {
 import ImagePicker from 'react-native-image-crop-picker'
 import { NavigationActions } from 'react-navigation'
 
-import ListItem from '../components/ListItem.js'
-import ItemSeparatorComponent from '../components/ItemSeparatorComponent.js'
-import CustomButton from '../components/CustomButton.js'
+import {
+  ListItem,
+  ItemSeparatorComponent,
+  CustomButton
+} from '../components'
 
 export default class PersonalSettings extends Component {
   constructor (props) {

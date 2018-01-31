@@ -7,10 +7,12 @@ import {
   StyleSheet
 } from 'react-native'
 
-import NoPermissionToVisit from '../components/NoPermissionToVisit.js'
-import MessageItem from '../components/MessageItem.js'
-import ItemSeparatorComponent from '../components/ItemSeparatorComponent.js'
-import CustomButton from '../components/CustomButton.js'
+import {
+  NoPermissionToVisit,
+  MessageItem,
+  ItemSeparatorComponent,
+  CustomButton
+} from '../components'
 
 export default class Messages extends Component {
   constructor (props) {

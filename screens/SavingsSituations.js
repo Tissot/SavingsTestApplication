@@ -9,9 +9,11 @@ import {
   Text
 } from 'react-native'
 
-import ListItem from '../components/ListItem.js'
-import SectionHeaderComponent from '../components/SectionHeaderComponent.js'
-import ItemSeparatorComponent from '../components/ItemSeparatorComponent.js'
+import {
+  ListItem,
+  SectionHeaderComponent,
+  ItemSeparatorComponent
+} from '../components'
 
 export default class SavingsSituations extends Component {
   constructor (props) {

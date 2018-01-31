@@ -7,9 +7,11 @@ import {
   Alert
 } from 'react-native'
 
-import NoPermissionToVisit from '../components/NoPermissionToVisit.js'
-import ListItem from '../components/ListItem.js'
-import ItemSeparatorComponent from '../components/ItemSeparatorComponent.js'
+import {
+  NoPermissionToVisit,
+  ListItem,
+  ItemSeparatorComponent
+} from '../components'
 
 export default class SavingsSituationsTypes extends Component {
   constructor (props) {

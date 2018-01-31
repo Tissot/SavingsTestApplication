@@ -11,7 +11,9 @@ import {
 
 import { RadioGroup, RadioButton } from 'react-native-flexi-radio-button'
 
-import CustomButton from '../components/CustomButton.js'
+import {
+  CustomButton
+} from '../components'
 
 export default class OnlineTest extends Component {
   constructor (props) {

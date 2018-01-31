@@ -7,9 +7,11 @@ import {
   FlatList
 } from 'react-native'
 
-import ListItem from '../components/ListItem.js'
-import ItemSeparatorComponent from '../components/ItemSeparatorComponent.js'
-import CustomButton from '../components/CustomButton.js'
+import {
+  ListItem,
+  ItemSeparatorComponent,
+  CustomButton
+} from '../components'
 
 export default class UserList extends Component {
   constructor (props) {

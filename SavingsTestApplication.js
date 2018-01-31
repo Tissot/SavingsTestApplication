@@ -18,18 +18,20 @@ import './libs/Platform.js'
 import './libs/Storage.js'
 import './libs/Styles.js'
 
-import OnlineLearning from './screens/OnlineLearning.js'
-import OnlineContent from './screens/OnlineContent.js'
-import OnlineTest from './screens/OnlineTest.js'
-import SavingsSituationsTypes from './screens/SavingsSituationsTypes.js'
-import SavingsSituations from './screens/SavingsSituations.js'
-import UserList from './screens/UserList.js'
-import PersonalSettings from './screens/PersonalSettings.js'
-import EditInfo from './screens/EditInfo.js'
-import Messages from './screens/Messages.js'
-import SystemNotification from './screens/SystemNotification.js'
-import PersonalCenter from './screens/PersonalCenter.js'
-import SignIn from './screens/SignIn.js'
+import {
+  EditInfo,
+  Messages,
+  OnlineContent,
+  OnlineLearning,
+  OnlineTest,
+  PersonalCenter,
+  PersonalSettings,
+  SavingsSituations,
+  SavingsSituationsTypes,
+  SignIn,
+  SystemNotification,
+  UserList
+} from './screens'
 
 const standardNavigationOptions = {
   headerStyle: {

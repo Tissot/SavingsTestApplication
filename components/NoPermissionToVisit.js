@@ -9,7 +9,7 @@ import {
 
 import PropTypes from 'prop-types'
 
-import CustomButton from './CustomButton.js'
+import { CustomButton } from './'
 
 export default class NoPermissionToVisit extends Component {
   constructor (props) {

@@ -7,8 +7,10 @@ import {
   Linking
 } from 'react-native'
 
-import ListItem from '../components/ListItem.js'
-import ItemSeparatorComponent from '../components/ItemSeparatorComponent.js'
+import {
+  ListItem,
+  ItemSeparatorComponent
+} from '../components'
 
 export default class PersonalCenter extends Component {
   constructor (props) {
