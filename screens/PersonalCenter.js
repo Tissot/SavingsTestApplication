@@ -26,16 +26,6 @@ export default class PersonalCenter extends Component {
             }
           ]
         },
-        // {
-        //   key: '1',
-        //   data: [
-        //     {
-        //       key: '积分兑换',
-        //       icon: require('../assets/icons/Points.png'),
-        //       value: 0
-        //     }
-        //   ]
-        // },
         {
           key: '2',
           data: [

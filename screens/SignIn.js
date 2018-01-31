@@ -52,10 +52,6 @@ export default class SignIn extends Component {
             styles.signInForm,
             { margin: this.$horizontalSpacingDistance }
           ]}>
-            {/* <Image source={require('../assets/images/xxx')} style={[
-              styles.logo,
-              { marginBottom: this.$verticalSpacingDistance }
-            ]}/> */}
             <CustomTextInput
               theme='light'
               keyboardType='phone-pad'
