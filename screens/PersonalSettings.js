@@ -96,11 +96,7 @@ export default class PersonalSettings extends Component {
                         this.getUserInfo()
                       }
 
-                      Alert.alert('修改头像', response.message, [
-                        {
-                          text: '确认'
-                        }
-                      ])
+                      Alert.alert('修改头像', response.message, [{ text: '确认' }])
                     } catch (error) {
                     }
                   } else if (item.key === '昵称') {

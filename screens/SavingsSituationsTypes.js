@@ -3,8 +3,7 @@
 import React, { Component } from 'react'
 import {
   View,
-  SectionList,
-  Alert
+  SectionList
 } from 'react-native'
 
 import {
