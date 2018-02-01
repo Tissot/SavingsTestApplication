@@ -1,3 +1,3 @@
 #SavingsTestApplication
 
-> An application for the savings test based on React Native.
+> An iOS/Android application for the savings test based on React Native.
