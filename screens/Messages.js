@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   View,
   FlatList,
@@ -14,7 +14,7 @@ import {
   CustomButton
 } from '../components'
 
-export default class Messages extends Component {
+export default class Messages extends PureComponent {
   constructor (props) {
     super(props)
 
@@ -39,7 +39,7 @@ export default class Messages extends Component {
     }
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.props.screenProps.hasPassedTheExam === true && this.refresh()
   }
 
@@ -53,7 +53,6 @@ export default class Messages extends Component {
         {
           this.props.screenProps.hasPassedTheExam === false ? 
           <NoPermissionToVisit
-            module='消息'
             navigate={this.props.navigation.navigate}
           /> :
           <FlatList
@@ -73,9 +72,16 @@ export default class Messages extends Component {
                   }
 
                   if (item.type === 0) {
-                    this.props.navigation.navigate('SystemNotification', { title: '系统通知', content: item.content, date: item.date })
+                    this.props.navigation.navigate('SystemNotification', {
+                      title: this.$i18n.t('messages.systemNotification'),
+                      content: item.content,
+                      date: item.date
+                    })
                   } else if (item.type === 1) {
-                    this.props.navigation.navigate('SavingsSituations', { title: item.nickname, userId: item.userId })
+                    this.props.navigation.navigate('SavingsSituations', {
+                      title: item.nickname,
+                      userId: item.userId
+                    })
                   }
                 }}
               />
@@ -90,7 +96,7 @@ export default class Messages extends Component {
               }}>
                   <CustomButton
                     onPress={() => this.getMessages()}
-                    text='加载更多'
+                    text={this.$i18n.t('peerSavingsSituations.loadMore')}
                   />
               </View>
             ) : undefined}
@@ -100,28 +106,6 @@ export default class Messages extends Component {
         }
       </View>
     )
-  }
-
-  shouldComponentUpdate (newProps, newState) {
-    if (this.props.screenProps.hasPassedTheExam !== newProps.screenProps.hasPassedTheExam) {
-       return true
-    }
-    
-    if (this.state.refreshing !== newState.refreshing) {
-      return true
-    }
-
-    if (this.state.messages.length !== newState.messages.length) {
-      return true
-    } else {
-      for (let i = 0; i < this.state.messages.length; ++i) {
-        if (this.state.messages[i]._id !== newState.messages[i]._id) {
-          return true
-        }
-      }
-
-      return false
-    }
   }
 
   async getMessages () {

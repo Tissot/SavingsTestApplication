@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React from 'react'
 import {
   View,
   Text,
@@ -9,23 +9,19 @@ import {
 
 import PropTypes from 'prop-types'
 
-export default class SectionHeaderComponent extends Component {
-  constructor (props) {
-    super(props)
-  }
+import { verticalSpacingDistance } from '../libs/Styles'
 
-  render () {
-    return (
-      <View style={[
-        { height: this.$verticalSpacingDistance },
-        this.props.sectionHeaderText && { justifyContent: 'center' }
-      ]}>
-      {
-        this.props.sectionHeaderText && <Text style={styles.sectionHeader}>{this.props.sectionHeaderText}</Text>
-      }
-      </View>
-    )
-  }
+export default function SectionHeaderComponent (props) {
+  return (
+    <View style={[
+      { height: verticalSpacingDistance },
+      props.sectionHeaderText && { justifyContent: 'center' }
+    ]}>
+    {
+      props.sectionHeaderText && <Text style={styles.sectionHeader}>{props.sectionHeaderText}</Text>
+    }
+    </View>
+  )
 }
 
 SectionHeaderComponent.propType = {

@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   View,
   StatusBar,
@@ -14,7 +14,7 @@ import {
   CustomButton
 } from '../components'
 
-export default class OnlineLearning extends Component {
+export default class OnlineLearning extends PureComponent {
   constructor (props) {
     super(props)
 
@@ -34,7 +34,7 @@ export default class OnlineLearning extends Component {
     }
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.getOnlineContents()
   }
 
@@ -56,7 +56,10 @@ export default class OnlineLearning extends Component {
             <ListItem
               onPress={() => {
                 if (item.type === 0) {
-                  this.props.navigation.navigate('OnlineContent', { title: item.title, url: item.url })
+                  this.props.navigation.navigate('OnlineContent', {
+                    title: item.title,
+                    url: item.url
+                  })
                 } else if (item.type === 1) {
                   Linking.openURL(item.url)
                 }
@@ -78,7 +81,7 @@ export default class OnlineLearning extends Component {
             }}>
               <CustomButton
                 onPress={() => this.props.navigation.navigate('OnlineTest')}
-                text='开始测验'
+                text={this.$i18n.t('onlineLearning.beginTest')}
               />
             </View>
           ) : undefined}
@@ -87,24 +90,6 @@ export default class OnlineLearning extends Component {
         />
       </View>
     )
-  }
-
-  shouldComponentUpdate (newProps, newState) {
-    if (this.state.refreshing !== newState.refreshing) {
-      return true
-    }
-
-    if (this.state.onlineContents.length !== newState.onlineContents.length) {
-      return true
-    } else {
-      for (let i = 0; i < this.state.onlineContents.length; ++i) {
-        if (this.state.onlineContents[i]._id !== newState.onlineContents[i]._id) {
-          return true
-        }
-      }
-
-      return false
-    }
   }
 
   getOnlineContents () {

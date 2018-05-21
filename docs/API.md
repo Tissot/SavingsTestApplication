@@ -295,22 +295,6 @@
 	> >
 	> ```
 
-- ### 获取用户积分
-
-	> #### request:
-	> ``` ruby
-	> url: /user/getUserPoints,
-	> data: undefined
-	> ```
-	> #### response:
-	> ``` ruby
-	> statusCode: enum(100, 101),
-	> message: string,
-	> result: object <
-	> 	Points: number	// 积分
-	> >
-	> ```
-
 - ### 获取调查问卷
 
 	> #### request:

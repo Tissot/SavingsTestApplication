@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   ScrollView,
   StatusBar,
@@ -19,7 +19,7 @@ import {
   CustomTextInput
 } from '../components'
 
-export default class SignIn extends Component {
+export default class SignIn extends PureComponent {
   constructor (props) {
     super(props)
 
@@ -33,7 +33,7 @@ export default class SignIn extends Component {
     }
   }
 
-  async componentWillMount () {
+  async componentDidMount () {
     this.signInAutomatically()
   }
 
@@ -57,7 +57,7 @@ export default class SignIn extends Component {
             <CustomTextInput
               theme='light'
               keyboardType='phone-pad'
-              placeholder='手机'
+              placeholder={this.$i18n.t('mobilePhone')}
               returnKeyType='next'
               onChangeText={(mobilePhone) => this.setState({ mobilePhone })}
               onSubmitEditing={() => this.passwordInput.focus()}
@@ -67,7 +67,7 @@ export default class SignIn extends Component {
               marginBottom={16}
               secureTextEntry={true}
               theme='light'
-              placeholder='密码'
+              placeholder={this.$i18n.t('password')}
               returnKeyType='done'
               onChangeText={(password) => this.setState({ password })}
               onSubmitEditing={() => this.signIn()}
@@ -78,15 +78,18 @@ export default class SignIn extends Component {
                 backgroundColor: 'transparent'
               }}
               activeOpacity={.8}
-              onPress={() => this.props.navigation.navigate('EditInfo', { title: '手机号', buttonText: '获取验证码' })}
+              onPress={() => this.props.navigation.navigate('EditInfo', {
+                title: this.$i18n.t('mobilePhone'),
+                buttonText: this.$i18n.t('editInfo.getVerificationCode')
+              })}
             >
               <Text style={{
                 color: '#fff'
-              }}>忘记密码？</Text>
+              }}>{this.$i18n.t('signIn.getBackPassword')}</Text>
             </TouchableOpacity>
             <CustomButton
               onPress={() => this.signIn()}
-              text='登录'
+              text={this.$i18n.t('signIn.signIn')}
             />
           </KeyboardAvoidingView>
         </Image>
@@ -94,11 +97,12 @@ export default class SignIn extends Component {
     )
   }
 
-  shouldComponentUpdate () {
-    return false
-  }
-
   async signInSuccessfully (token) {
+    await this.$storage.save({
+      key: 'token',
+      data: token
+    })
+
     this.$JSONAjax.defaults.headers.common['token'] = token,
 
     this.props.navigation.dispatch(NavigationActions.reset({
@@ -125,22 +129,19 @@ export default class SignIn extends Component {
     }
   }
 
-  async handleSignInResponse (response) {
-    if (response.statusCode === 100) {
-      await this.$storage.save({
-        key: 'token',
-        data: response.result.token
-      })
-
-      this.signInSuccessfully(response.result.token)
-    }
-  }
-
   async signIn () {
     if (this.state.mobilePhone === '') {
-      Alert.alert('登录', '请输入手机号', [{text: '确认'}])
+      Alert.alert(
+        this.$i18n.t('signIn.signIn'),
+        this.$i18n.t('signIn.inputMobilePhone'),
+        [{ text: this.$i18n.t('alert.confirm') }]
+      )
     } else if (this.state.password === '') {
-      Alert.alert('登录', '请输入密码', [{text: '确认'}])
+      Alert.alert(
+        this.$i18n.t('signIn.signIn'),
+        this.$i18n.t('signIn.inputPassword'),
+        [{ text: this.$i18n.t('alert.confirm') }]
+      )
     } else {
       const response = (await this.$JSONAjax({
         method: 'post',
@@ -148,14 +149,29 @@ export default class SignIn extends Component {
         data: this.state
       })).data
   
-      Alert.alert('登录', response.message, [
-        {
-          text: '确认',
-          onPress: () => this.handleSignInResponse(response)
-        }
-      ], {
-        onDismiss: () => this.handleSignInResponse(response)
-      })
+      if (response.statusCode === 100) {
+        Alert.alert(
+          this.$i18n.t('signIn.signIn'),
+          this.$i18n.t('signIn.signInSuccessfully'),
+          [
+            {
+              text: this.$i18n.t('alert.confirm'),
+              onPress: () => this.signInSuccessfully(response.result.token)
+            }
+          ],
+          { onDismiss: () => this.signInSuccessfully(response.result.token) }
+        )
+      } else if (response.statusCode === 101) {
+        Alert.alert(
+          this.$i18n.t('signIn.signIn'),
+          this.$i18n.t('signIn.wrongMobileOrPassword'),
+          [
+            {
+              text: this.$i18n.t('alert.confirm'),
+            }
+          ]
+        )
+      }
     }
   }
 }

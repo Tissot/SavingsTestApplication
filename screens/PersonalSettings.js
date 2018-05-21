@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   SectionList,
   View,
@@ -16,7 +16,7 @@ import {
   CustomButton
 } from '../components'
 
-export default class PersonalSettings extends Component {
+export default class PersonalSettings extends PureComponent {
   constructor (props) {
     super(props)
     this.state = {
@@ -26,7 +26,7 @@ export default class PersonalSettings extends Component {
           key: '0',
           data: [
             {
-              key: '头像',
+              key: this.$i18n.t('personalSettings.avatar'),
               value: 'https://mardan.top/avatar/female.jpeg'
             }
           ]
@@ -35,7 +35,7 @@ export default class PersonalSettings extends Component {
           key: '1',
           data: [
             {
-              key: '昵称',
+              key: this.$i18n.t('personalSettings.nickname'),
               value: 'null'
             }
           ]
@@ -44,7 +44,7 @@ export default class PersonalSettings extends Component {
           key: '2',
           data: [
             {
-              key: '密码',
+              key: this.$i18n.t('password'),
               value: '********'
             }
           ]
@@ -53,7 +53,7 @@ export default class PersonalSettings extends Component {
     }
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.getUserInfo()
   }
   
@@ -70,10 +70,10 @@ export default class PersonalSettings extends Component {
             return (
               <ListItem
                 itemKey={item.key}
-                valueType={item.key === '头像' ? 'image' : 'text'}
+                valueType={item.key === this.$i18n.t('personalSettings.avatar') ? 'image' : 'text'}
                 itemValue={item.value}
                 onPress={async () => {
-                  if (item.key === '头像') {
+                  if (item.key === this.$i18n.t('personalSettings.avatar')) {
                     try {
                       const image = await ImagePicker.openPicker({
                         width: 300,
@@ -91,15 +91,24 @@ export default class PersonalSettings extends Component {
                         url: '/user/editAvatar',
                         data
                       })).data
-
+                      
                       if (response.statusCode === 100) {
                         this.getUserInfo()
+                        Alert.alert(
+                          this.$i18n.t('editInfo.submitResult'),
+                          this.$i18n.t('editInfo.submitSuccessfully'),
+                          [{ text: this.$i18n.t('alert.confirm') }]
+                        )
+                      } else if (response.statusCode === 101) {
+                        Alert.alert(
+                          this.$i18n.t('editInfo.submitResult'),
+                          this.$i18n.t('editInfo.failedToSubmit'),
+                          [{ text: this.$i18n.t('alert.confirm') }]
+                        )
                       }
-
-                      Alert.alert('修改头像', response.message, [{ text: '确认' }])
                     } catch (error) {
                     }
-                  } else if (item.key === '昵称') {
+                  } else if (item.key === this.$i18n.t('personalSettings.nickname')) {
                     this.props.navigation.navigate('EditInfo', {
                       title: item.key,
                       defaultValue: item.value,
@@ -107,10 +116,10 @@ export default class PersonalSettings extends Component {
                         this.getUserInfo()
                       }
                     })
-                  } else if (item.key === '密码') {
+                  } else if (item.key === this.$i18n.t('password')) {
                     this.props.navigation.navigate('EditInfo', {
-                      title: '手机验证码',
-                      buttonText: '下一步'
+                      title: this.$i18n.t('editInfo.verificationCode'),
+                      buttonText: this.$i18n.t('editInfo.next')
                     })
                   }
                 }}
@@ -131,7 +140,7 @@ export default class PersonalSettings extends Component {
               <CustomButton
                 backgroundColor='red'
                 onPress={() => this.signOut()}
-                text='退出登录'
+                text={this.$i18n.t('personalSettings.signOut')}
               />
             </View>
           ) : undefined}
@@ -140,13 +149,6 @@ export default class PersonalSettings extends Component {
         />
       </View>
     )
-  }
-
-  shouldComponentUpdate (newProps, newState) {
-    return this.state.refreshing !== newState.refreshing ||
-    this.state.personalSettings[0].data[0].value !== newState.personalSettings[0].data[0].value ||
-    this.state.personalSettings[1].data[0].value !== newState.personalSettings[1].data[0].value ||
-    this.state.personalSettings[2].data[0].value !== newState.personalSettings[2].data[0].value
   }
 
   getUserInfo () {
@@ -165,7 +167,7 @@ export default class PersonalSettings extends Component {
               key: '0',
               data: [
                 {
-                  key: '头像',
+                  key: this.$i18n.t('personalSettings.avatar'),
                   value: avatar
                 }
               ]
@@ -174,7 +176,7 @@ export default class PersonalSettings extends Component {
               key: '1',
               data: [
                 {
-                  key: '昵称',
+                  key: this.$i18n.t('personalSettings.nickname'),
                   value: nickname
                 }
               ]
@@ -183,7 +185,7 @@ export default class PersonalSettings extends Component {
               key: '2',
               data: [
                 {
-                  key: '密码',
+                  key: this.$i18n.t('password'),
                   value: '********'
                 }
               ]
@@ -191,7 +193,7 @@ export default class PersonalSettings extends Component {
           ]
         })
   
-        this.props.navigation.state.params.refreshFunction(avatar, nickname)
+        this.props.navigation.state.params.refreshFunction({ avatar, nickname })
       }
   
       this.setState({ refreshing: false })
@@ -221,13 +223,18 @@ export default class PersonalSettings extends Component {
       url: 'user/signOut'
     })).data
 
-    Alert.alert('登出', response.message, [
-      {
-        text: '确认',
-        onPress: () => this.handleSignOutResponse(response)
-      }
-    ], {
-      onDismiss: () => this.handleSignOutResponse(response)
-    })
+    Alert.alert(
+      this.$i18n.t('personalSettings.signOut'),
+      response.statusCode === 100 
+      ? this.$i18n.t('personalSettings.signOutSuccessfully')
+      : this.$i18n.t('userHasBeenDeleted'),
+      [
+        {
+          text: this.$i18n.t('alert.confirm'),
+          onPress: () => this.handleSignOutResponse(response)
+        }
+      ],
+      { onDismiss: () => this.handleSignOutResponse(response) }
+    )
   }
 }

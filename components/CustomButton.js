@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React from 'react'
 import {
   TouchableOpacity,
   Text,
@@ -9,29 +9,29 @@ import {
 
 import PropTypes from 'prop-types'
 
-export default class CustomButton extends Component {
-  render () {
-    return (
-      <TouchableOpacity
-      activeOpacity={this.props.activeOpacity}
+import { mainColor } from '../libs/Styles'
+
+export default function CustomButton (props) {
+  return (
+    <TouchableOpacity
+      activeOpacity={props.activeOpacity}
       style={[
         styles.button,
         {
-          backgroundColor: this.props.backgroundColor,
-          height: this.props.height
+          backgroundColor: props.backgroundColor,
+          height: props.height
         }
       ]}
-      onPress={this.props.onPress}
+      onPress={props.onPress}
     >
       <Text style={[
         styles.buttonText,
-        this.props.width === 'auto' ? { flex: 1 } : { width: this.props.width }
+        props.width === 'auto' ? { flex: 1 } : { width: props.width }
       ]}>
-        {this.props.text}
+        {props.text}
       </Text>
     </TouchableOpacity>
-    )
-  }
+  )
 }
 
 CustomButton.propTypes = {
@@ -50,7 +50,7 @@ CustomButton.defaultProps = {
   width: 'auto',
   height: 40,
   activeOpacity: .8,
-  backgroundColor: Component.prototype.$mainColor
+  backgroundColor: mainColor
 }
 
 const styles = StyleSheet.create({

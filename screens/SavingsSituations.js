@@ -2,7 +2,7 @@
 
 'use strict'
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   View,
   SectionList,
@@ -15,62 +15,92 @@ import {
   ItemSeparatorComponent
 } from '../components'
 
-export default class SavingsSituations extends Component {
+export default class SavingsSituations extends PureComponent {
   constructor (props) {
     super(props)
     this.state = {
       refreshing: false,
+      userHasBeenDeleted: false,
       savingsSituations: []
     }
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.getSavingsSituations()
   }
   
   render () {
     const { title, group, userId } = this.props.navigation.state.params
-    const savingsSituationsType = ['每月储蓄情况', '历史储蓄情况', '子女教育储蓄情况'].indexOf(title)
+    const savingsSituationsType = [
+      this.$i18n.t('monthlySavingsSituations.title'),
+      this.$i18n.t('historicalSavingsSituations.title'),
+      this.$i18n.t('childrenEduSavingsSituations.title')
+    ].indexOf(title)
 
     return (
-      <View style={{
-        flex: 1,
-        backgroundColor: this.$screenBackgroundColor
-      }}>
-        <SectionList
-          sections={this.state.savingsSituations}
-          keyExtractor={(item) => item.key}
-          renderItem={({item}) => <ListItem
-            itemKey={item.key}
-            itemValue={item.value === null ? item.key === '每月建议储蓄额' ? '无' : '未填写' : String(item.value)}
-            onPress={item.value === null && item.key !== '每月建议储蓄额' && userId === undefined ? () => this.props.navigation.navigate('EditInfo', {
-              savingsSituationsType,
-              title: savingsSituationsType === 0 ? item.key : `${item.year}年${item.key}`,
-              defaultValue: item.value,
-              refreshFunction: () => this.getSavingsSituations()
-            }) : undefined}
-          />}
-          renderSectionHeader={(({ section }) => <SectionHeaderComponent
-            sectionHeaderText={(title === '历史储蓄情况' || title === '子女教育储蓄情况') && section.key || undefined}
-          />)}
-          ListHeaderComponent={(group === 1 || group === 2) && (() => (
-            <View style={{
-              paddingTop: 20,
-              paddingBottom: 20,
-              paddingLeft: 24,
-              paddingRight: 24,
-              backgroundColor: '#fff'
-            }}>
-              <Text style={{
-                fontSize: 14,
-                color: '#8f8f8f'
-              }}>历史储蓄情况的每月实际储蓄额包含对应月份的子女教育实际储蓄额。</Text>
-            </View>
-          ))}
-          ItemSeparatorComponent={ItemSeparatorComponent}
-          refreshing={this.state.refreshing}
-          onRefresh={() => this.getSavingsSituations()}
-        />
+      <View style={[
+        {
+          flex: 1,
+          backgroundColor: this.$screenBackgroundColor
+        },
+        this.state.savingsSituations.length === 0 && {
+          justifyContent: 'center',
+          alignItems: 'center'
+        }
+      ]}>
+        {
+          this.state.userHasBeenDeleted === false ? <SectionList
+              sections={this.state.savingsSituations}
+              keyExtractor={(item) => item.key}
+              renderItem={({item}) => <ListItem
+                itemKey={item.key}
+                itemValue={
+                  item.value === null
+                  ? item.key === this.$i18n.t('monthlySavingsSituations.monthlyRecommendedSavings')
+                  ? this.$i18n.t('null') : this.$i18n.t('unfilled')
+                  : String(item.value)
+                }
+                onPress={
+                  item.value === null
+                  && item.key !== this.$i18n.t('monthlySavingsSituations.monthlyRecommendedSavings')
+                  && userId === undefined ? () => this.props.navigation.navigate('EditInfo', {
+                    savingsSituationsType,
+                    title: savingsSituationsType === 0 ? item.key : item.year + this.$i18n.t('year') + item.key,
+                    defaultValue: item.value,
+                    refreshFunction: () => this.getSavingsSituations()
+                  }) : undefined
+                }
+              />}
+              renderSectionHeader={(({ section }) => <SectionHeaderComponent
+                sectionHeaderText={
+                  (
+                    title === this.$i18n.t('historicalSavingsSituations.title')
+                    || title === this.$i18n.t('childrenEduSavingsSituations.title')
+                  )
+                  && section.key
+                  || undefined
+                }
+              />)}
+              ListHeaderComponent={(group === 1 || group === 2) && (() => (
+                <View style={{
+                  paddingTop: 20,
+                  paddingBottom: 20,
+                  paddingLeft: 24,
+                  paddingRight: 24,
+                  backgroundColor: '#fff'
+                }}>
+                  <Text style={{
+                    fontSize: 14,
+                    color: '#8f8f8f'
+                  }}>{this.$i18n.t('historicalSavingsSituations.tips')}</Text>
+                </View>
+              ))}
+              ItemSeparatorComponent={ItemSeparatorComponent}
+              refreshing={this.state.refreshing}
+              onRefresh={() => this.getSavingsSituations()}
+            />
+            : <Text style={{ fontSize: 16 }}>{ this.$i18n.t('userHasBeenDeleted') }</Text>
+          }
       </View>
     )
   }
@@ -78,9 +108,12 @@ export default class SavingsSituations extends Component {
   getSavingsSituations () {
     this.setState({ refreshing: true }, async () => {
       const { title, userId } = this.props.navigation.state.params
-      const savingsSituationType = ['历史储蓄情况', '子女教育储蓄情况'].indexOf(title)
+      const savingsSituationType = [
+        this.$i18n.t('historicalSavingsSituations.title'),
+        this.$i18n.t('childrenEduSavingsSituations.title')
+      ].indexOf(title)
 
-      if (title === '每月储蓄情况') {
+      if (title === this.$i18n.t('monthlySavingsSituations.title')) {
         const response = (await this.$JSONAjax({
           method: 'post',
           url: '/savingsSituation/getEachMonthSavingsSituations'
@@ -97,20 +130,32 @@ export default class SavingsSituations extends Component {
               {
                 key: '0',
                 data: [ 
-                  { key: '每月支出', value: response.result.eachMonthSavingsSituations[0] },
-                  { key: '每月收入', value: response.result.eachMonthSavingsSituations[1] }
+                  {
+                    key: this.$i18n.t('monthlySavingsSituations.monthlyOutcome'),
+                    value: response.result.eachMonthSavingsSituations[0]
+                  },
+                  {
+                    key: this.$i18n.t('monthlySavingsSituations.monthlyIncome'),
+                    value: response.result.eachMonthSavingsSituations[1]
+                  }
                 ]
               },
               {
                 key: '1',
                 data: [
-                  { key: '每月建议储蓄额', value: response.result.eachMonthSavingsSituations[2] }
+                  {
+                    key: this.$i18n.t('monthlySavingsSituations.monthlyRecommendedSavings'),
+                    value: response.result.eachMonthSavingsSituations[2]
+                  }
                 ]
               },
               {
                 key: '2',
                 data: [
-                  { key: '每月期望储蓄额', value: response.result.eachMonthSavingsSituations[3] }
+                  {
+                    key: this.$i18n.t('monthlySavingsSituations.monthlyGoal'),
+                    value: response.result.eachMonthSavingsSituations[3]
+                  }
                 ]
               }
             ]
@@ -125,11 +170,27 @@ export default class SavingsSituations extends Component {
           }
         })).data
 
-        for (let historicalSavingsSituation of response.result.historicalSavingsSituations) {
-          for (let actualSavingsSituation of historicalSavingsSituation.data) {
-            actualSavingsSituation.year = historicalSavingsSituation.key
-          }
+        const transform = {
+          '一月实际储蓄额': this.$i18n.t('historicalSavingsSituations.Jan'),
+          '二月实际储蓄额': this.$i18n.t('historicalSavingsSituations.Feb'),
+          '三月实际储蓄额': this.$i18n.t('historicalSavingsSituations.Mar'),
+          '四月实际储蓄额': this.$i18n.t('historicalSavingsSituations.Apr'),
+          '五月实际储蓄额': this.$i18n.t('historicalSavingsSituations.May'),
+          '六月实际储蓄额': this.$i18n.t('historicalSavingsSituations.Jun'),
+          '七月实际储蓄额': this.$i18n.t('historicalSavingsSituations.Jul'),
+          '八月实际储蓄额': this.$i18n.t('historicalSavingsSituations.Aug'),
+          '九月实际储蓄额': this.$i18n.t('historicalSavingsSituations.Sep'),
+          '十月实际储蓄额': this.$i18n.t('historicalSavingsSituations.Oct'),
+          '十一月实际储蓄额': this.$i18n.t('historicalSavingsSituations.Nov'),
+          '十二月实际储蓄额': this.$i18n.t('historicalSavingsSituations.Dec')
         }
+
+        response.result.historicalSavingsSituations.forEach(historicalSavingsSituation => {
+          historicalSavingsSituation.data.forEach(actualSavingsSituation => {
+            actualSavingsSituation.key = transform[actualSavingsSituation.key]
+            actualSavingsSituation.year = historicalSavingsSituation.key
+          })
+        })
     
         if (response.statusCode === 100) {
           this.setState({ savingsSituations: response.result.historicalSavingsSituations })
@@ -150,11 +211,11 @@ export default class SavingsSituations extends Component {
                 key: '0',
                 data: [
                   {
-                    key: '每月期望储蓄额',
+                    key: this.$i18n.t('monthlySavingsSituations.monthlyGoal'),
                     value: response.result[0]
                   },
                   {
-                    key: '最新实际储蓄额',
+                    key: this.$i18n.t('peerSavingsSituations.latestSavings'),
                     value: response.result[1]
                   }
                 ]
@@ -163,13 +224,15 @@ export default class SavingsSituations extends Component {
                 key: '1',
                 data: [
                   {
-                    key: '是否达成期望储蓄额',
+                    key: this.$i18n.t('peerSavingsSituations.whetherAchieveGoal'),
                     value: response.result[2]
                   }
                 ]
               }
             ]
           })
+        } else if (response.statusCode === 101) {
+          this.setState({ userHasBeenDeleted: true })
         }
       }
 

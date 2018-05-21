@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   View,
   FlatList,
@@ -15,7 +15,7 @@ import {
   CustomButton
 } from '../components'
 
-export default class OnlineTest extends Component {
+export default class OnlineTest extends PureComponent {
   constructor (props) {
     super(props)
 
@@ -37,7 +37,7 @@ export default class OnlineTest extends Component {
     }
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.getQuestions()
   }
 
@@ -82,7 +82,7 @@ export default class OnlineTest extends Component {
             }}>
                <CustomButton
                 onPress={() => this.checkAnswer()}
-                text='校对答案'
+                text={this.$i18n.t('onlineTest.checkAnswer')}
               />
             </View>
           ) : undefined}
@@ -91,28 +91,6 @@ export default class OnlineTest extends Component {
         />
       </View>
     )
-  }
-
-  shouldComponentUpdate (newProps, newState) {
-    if (this.state.refreshing !== newState.refreshing) {
-      return true
-    }
-
-    if (this.state.questions.length !== newState.questions.length) {
-      return true
-    } else {
-      for (let i = 0; i < this.state.questions.length; ++i) {
-        if (this.state.questions[i]._id !== newState.questions[i]._id) {
-          return true
-        }
-      }
-      
-      return false
-    }
-  }
-
-  shouldComponentUpdate (newProps, newState) {
-    return this.state.refreshing !== newState.refreshing
   }
 
   initSelections () {
@@ -131,7 +109,11 @@ export default class OnlineTest extends Component {
 
     for (let i = 0; i < length; ++i) {
       if (this.state.selections[i] === null) {
-        Alert.alert('校对答案', '请先完成所有试题', [{ text: '确认' }])
+        Alert.alert(
+          this.$i18n.t('onlineTest.checkAnswer'),
+          this.$i18n.t('onlineTest.completeAllQuestions'),
+          [{ text: this.$i18n.t('alert.confirm') }]
+        )
 
         return
       }
@@ -151,16 +133,29 @@ export default class OnlineTest extends Component {
 
       await this.props.screenProps.getHasPassedTheExam()
 
-      Alert.alert('校对答案', response.message, [
+      Alert.alert(
+        this.$i18n.t('onlineTest.checkAnswer'),
+        this.$i18n.t('onlineTest.passTheTest'),
+        [
+          {
+            text: this.$i18n.t('alert.confirm'),
+            onPress: () => this.props.navigation.navigate('SavingsSituations', {
+              title: this.$i18n.t('monthlySavingsSituations.title')
+            })
+          }
+        ],
         {
-          text: '确认',
-          onPress: () => this.props.navigation.navigate('SavingsSituations', { title: '每月储蓄情况' })
+          onDismiss: () => this.props.navigation.navigate('SavingsSituations', {
+            title: this.$i18n.t('monthlySavingsSituations.title')
+          })
         }
-      ], {
-        onDismiss: () => this.props.navigation.navigate('SavingsSituations', { title: '每月储蓄情况' })
-      })
+      )
     } else {
-      Alert.alert('校对答案', '未通过测试', [{ text: '确认' }])
+      Alert.alert(
+        this.$i18n.t('onlineTest.checkAnswer'),
+        this.$i18n.t('onlineTest.failedTheTest'),
+        [{ text: this.$i18n.t('alert.confirm') }]
+      )
     }
   }
 

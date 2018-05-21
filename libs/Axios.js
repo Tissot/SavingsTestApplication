@@ -1,12 +1,12 @@
 'use strict'
 
-import { Component } from 'react'
+import { PureComponent } from 'react'
 import Axios from 'axios'
 
 Axios.defaults.baseURL = 'https://mardan.top'
 
 // 在每个 React Native 组件中注入 $JSONAjax 方法。
-Component.prototype.$JSONAjax = Axios
+PureComponent.prototype.$JSONAjax = Axios
 
 const formDataAjax = Axios.create({
   headers: {
@@ -15,6 +15,6 @@ const formDataAjax = Axios.create({
 })
 
 // 在每个 React Native 组件中注入 $formDataAjax 方法。
-Component.prototype.$formDataAjax = formDataAjax
+PureComponent.prototype.$formDataAjax = formDataAjax
 
 export default Axios

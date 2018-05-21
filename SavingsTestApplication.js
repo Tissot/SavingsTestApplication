@@ -1,11 +1,13 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   View,
   Image,
   Alert
 } from 'react-native'
+
+import I18n from './i18n'
 
 import {
   StackNavigator,
@@ -35,7 +37,7 @@ import {
 
 const standardNavigationOptions = {
   headerStyle: {
-    backgroundColor: Component.prototype.$mainColor,
+    backgroundColor: PureComponent.prototype.$mainColor,
   },
   headerTitleStyle: {
     fontSize: 18
@@ -53,44 +55,44 @@ const iconStyle = {
 const User = TabNavigator({
   OnlineLearning: {
     screen: OnlineLearning,
-    navigationOptions: {
-      title: '在线学习',
+    navigationOptions: () =>  ({
+      title: I18n.t('onlineLearning.title'),
       tabBarIcon: ({ tintColor }) => (
         <Image
           source={require('./assets/icons/OnlineLearning.png')}
           style={{
-            tintColor: tintColor,
+            tintColor,
             ...iconStyle
           }}
         />
       )
-    }
+    })
   },
   SavingsSituationsTypes: {
     screen: SavingsSituationsTypes,
-    navigationOptions: {
-      title: '储蓄情况',
+    navigationOptions: () => ({
+      title: I18n.t('savingsSituationsTypes.title'),
       tabBarIcon: ({ tintColor }) => (
         <Image
           source={require('./assets/icons/SavingsSituations.png')}
           style={{
-            tintColor: tintColor,
+            tintColor,
             ...iconStyle
           }}
         />
       )
-    }
+    })
   },
   Messages: {
     screen: Messages,
     navigationOptions: ({ screenProps }) => ({
-      title: '消息',
+      title: I18n.t('messages.title'),
       tabBarIcon: ({ tintColor }) => (
         <Image
           source={require('./assets/icons/Messages.png')}
           style={{
             position: 'relative',
-            tintColor: tintColor,
+            tintColor,
             ...iconStyle
           }}
         >
@@ -112,18 +114,18 @@ const User = TabNavigator({
   },
   PersonalCenter: {
     screen: PersonalCenter,
-    navigationOptions: {
-      title: '个人中心',
+    navigationOptions: () => ({
+      title: I18n.t('personalCenter.title'),
       tabBarIcon: ({ tintColor }) => (
         <Image
           source={require('./assets/icons/PersonalCenter.png')}
           style={{
-            tintColor: tintColor,
+            tintColor,
             ...iconStyle
           }}
         />
       )
-    }
+    })
   }
 }, {
   tabBarComponent: TabBarBottom,
@@ -133,7 +135,7 @@ const User = TabNavigator({
   lazy: true,
   tabBarOptions: {
     backBehavior: 'none',
-    activeTintColor: Component.prototype.$mainColor,
+    activeTintColor: PureComponent.prototype.$mainColor,
     inactiveTintColor: '#8f8f8f',
     style: {
       backgroundColor: '#fff'
@@ -164,10 +166,10 @@ const App = StackNavigator({
   },
   OnlineTest: {
     screen: OnlineTest,
-    navigationOptions: {
-      title: '在线测试',
+    navigationOptions: () => ({
+      title: I18n.t('onlineTest.title'),
       ...standardNavigationOptions
-    }
+    })
   },
   SavingsSituations: {
     screen: SavingsSituations,
@@ -208,7 +210,7 @@ const App = StackNavigator({
   headerMode: 'float'
 })
 
-export default class SavingsTestApplication extends Component {
+export default class SavingsTestApplication extends PureComponent {
   constructor (props) {
     super(props)
     this.state = {
@@ -217,12 +219,32 @@ export default class SavingsTestApplication extends Component {
     }
   }
 
+  async componentDidMount () {
+    try {
+      const locale = await this.$storage.load({
+        key: 'locale',
+        autoSync: false,
+        syncInBackground: false
+      })
+
+      if (locale) {
+        this.$i18n.locale = locale
+        this.forceUpdate()
+      }
+    } catch (err) {
+    }
+  }
+
   render () {
+    const { locale, hasNewMessages, hasPassedTheExam } = this.state;
+
     return (
       <App
         screenProps={{
-          hasNewMessages: this.state.hasNewMessages,
-          hasPassedTheExam: this.state.hasPassedTheExam,
+          locale,
+          hasNewMessages,
+          hasPassedTheExam,
+          toggleLocale: () => this.forceUpdate(),
           checkHasNewMessages: () => this.checkHasNewMessages(),
           getHasPassedTheExam: () => this.getHasPassedTheExam()
         }}

@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   View,
   SectionList,
@@ -12,7 +12,7 @@ import {
   ItemSeparatorComponent
 } from '../components'
 
-export default class PersonalCenter extends Component {
+export default class PersonalCenter extends PureComponent {
   constructor (props) {
     super(props)
     this.state = {
@@ -32,7 +32,7 @@ export default class PersonalCenter extends Component {
           key: '2',
           data: [
             {
-              key: '问卷调查',
+              key: this.$i18n.t('personalCenter.Questionnaire'),
               icon: require('../assets/icons/Questionaire.png'),
               questionnaireURL: ''
             }
@@ -42,9 +42,19 @@ export default class PersonalCenter extends Component {
           key: '3',
           data: [
             {
-              key: '咨询电话',
+              key: this.$i18n.t('personalCenter.hotline'),
               icon: require('../assets/icons/AdvisoryPhone.png'),
               value: ''
+            }
+          ]
+        },
+        {
+          key: '4',
+          data: [
+            {
+              key: this.$i18n.t('personalCenter.toggleLocale'),
+              icon: require('../assets/icons/Globalization.png'),
+              value: this.$i18n.t('locale')
             }
           ]
         }
@@ -52,7 +62,7 @@ export default class PersonalCenter extends Component {
     }
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.getUserInfo()
   }
   
@@ -72,14 +82,26 @@ export default class PersonalCenter extends Component {
                 iconSize={item.avatar !== undefined ? 52 : undefined}
                 itemKey={item.nickname || item.key}
                 itemValue={typeof item.value === 'number' ? String(item.value) : item.value}
-                onPress={() => {
+                onPress={async () => {
                   if (item.avatar !== undefined && item.nickname !== undefined) {
-                    this.props.navigation.navigate('PersonalSettings', { refreshFunction: (avatar, nickname) => this.refreshUserInfo({ avatar, nickname }) })
-                  } else if (item.key === '积分兑换') {
-                  } else if (item.key === '问卷调查') {
-                    Linking.openURL(item.questionnaireURL)
-                  } else if (item.key === '咨询电话') {
+                    this.props.navigation.navigate('PersonalSettings', {
+                      refreshFunction: (userInfo) => this.refreshUserInfo(userInfo)
+                    })
+                  } else if (item.key === this.$i18n.t('personalCenter.Questionnaire')) {
+                    this.props.navigation.navigate('OnlineContent', {
+                      title: item.key,
+                      url: item.questionnaireURL
+                    })
+                  } else if (item.key === this.$i18n.t('personalCenter.hotline')) {
                     Linking.openURL(`tel:${item.value}`)
+                  } else if (item.key === this.$i18n.t('personalCenter.toggleLocale')) {
+                    this.$i18n.locale = this.$i18n.currentLocale() === 'zhHans' ? 'zhHant' : 'zhHans'
+                    await this.$storage.save({
+                      key: 'locale',
+                      data: this.$i18n.locale
+                    })
+                    this.props.screenProps.toggleLocale()
+                    this.refreshUserInfo()
                   }
                 }}
               />
@@ -96,23 +118,15 @@ export default class PersonalCenter extends Component {
     )
   }
 
-  shouldComponentUpdate (newProps, newState) {
-    return this.state.refreshing !== newState.refreshing ||
-    this.state.listItems[0].data[0].avatar !== newState.listItems[0].data[0].avatar ||
-    this.state.listItems[0].data[0].nickname !== newState.listItems[0].data[0].nickname ||
-    this.state.listItems[1].data[0].questionnaireURL !== newState.listItems[1].data[0].questionnaireURL ||
-    this.state.listItems[2].data[0].value !== newState.listItems[2].data[0].value
-  }
-
-  refreshUserInfo ({ avatar, nickname }, questionnaireURL, advisoryPhone) {
+  refreshUserInfo (userInfo, questionnaireURL, advisoryPhone) {
     this.setState((prevState, props) => ({
       listItems: [
         {
           key: '0',
           data: [
             {
-              avatar,
-              nickname
+              avatar: userInfo ? userInfo.avatar : prevState.listItems[0].data[0].avatar,
+              nickname: userInfo ? userInfo.nickname : prevState.listItems[0].data[0].nickname
             }
           ]
         },
@@ -120,7 +134,7 @@ export default class PersonalCenter extends Component {
           key: '2',
           data: [
             {
-              key: '问卷调查',
+              key: this.$i18n.t('personalCenter.Questionnaire'),
               icon: require('../assets/icons/Questionaire.png'),
               questionnaireURL: questionnaireURL || prevState.listItems[1].data[0].questionnaireURL
             }
@@ -130,9 +144,19 @@ export default class PersonalCenter extends Component {
           key: '3',
           data: [
             {
-              key: '咨询电话',
+              key: this.$i18n.t('personalCenter.hotline'),
               icon: require('../assets/icons/AdvisoryPhone.png'),
               value: advisoryPhone || prevState.listItems[2].data[0].value
+            }
+          ]
+        },
+        {
+          key: '4',
+          data: [
+            {
+              key: this.$i18n.t('personalCenter.toggleLocale'),
+              icon: require('../assets/icons/Globalization.png'),
+              value: this.$i18n.t('locale')
             }
           ]
         }

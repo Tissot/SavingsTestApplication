@@ -1,6 +1,6 @@
 'use strict'
 
-import { Component } from 'react'
+import { PureComponent } from 'react'
 
 import ReactNativeStorage from 'react-native-storage'
 import { AsyncStorage } from 'react-native'
@@ -27,6 +27,6 @@ const Storage = new ReactNativeStorage({
 })
 
 // 在每个 React Native 组件中注入 $storage 对象。
-Component.prototype.$storage = Storage
+PureComponent.prototype.$storage = Storage
 
 export default Storage

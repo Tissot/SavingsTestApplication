@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   View,
   TextInput,
@@ -9,7 +9,7 @@ import {
 
 import PropTypes from 'prop-types'
 
-export default class CustomInput extends Component {
+export default class CustomInput extends PureComponent {
   constructor (props) {
     super(props)
     this.state = {
@@ -108,10 +108,10 @@ CustomInput.propTypes = {
 
 CustomInput.defaultProps = {
   width: 'auto',
-  marginBottom: Component.prototype.$verticalSpacingDistance,
+  marginBottom: PureComponent.prototype.$verticalSpacingDistance,
   secureTextEntry: false,
   theme: 'dark',
-  focusColor: Component.prototype.$mainColor
+  focusColor: PureComponent.prototype.$mainColor
 }
 
 const styles = StyleSheet.create({

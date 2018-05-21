@@ -1,19 +1,17 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React from 'react'
 import {
   View,
   StyleSheet
 } from 'react-native'
 
-export default class ItemSeparatorComponent extends Component {
-  render () {
-    return (
-      <View style={styles.itemSeparatorContainer}>
-        <View style={styles.itemSeparator}></View>
-      </View>
-    )
-  }
+export default function ItemSeparatorComponent () {
+  return (
+    <View style={styles.itemSeparatorContainer}>
+      <View style={styles.itemSeparator}></View>
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({

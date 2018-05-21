@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React from 'react'
 import {
   TouchableHighlight,
   View,
@@ -10,73 +10,72 @@ import {
 
 import PropTypes from 'prop-types'
 
-export default class MessageItem extends Component {
-  constructor (props) {
-    super(props)
-  }
+import { listUnderColor } from '../libs/Styles'
+import I18n from '../i18n'
 
-  render () {
-    return (
-      <TouchableHighlight underlayColor={this.$listUnderColor} onPress={this.props.onPress}>
-        <View style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingTop: 12,
-          paddingBottom: 12,
-          paddingLeft: 20,
-          paddingRight: 20,
-          backgroundColor: '#fff'
-        }}>
-          <Image
-            source={this.props.type === 0 && require('../assets/icons/SystemMessage.png')
-            || this.props.type === 1 && { uri: this.props.avatar }}
-            style={{
-              position: 'relative',
-              width: 40,
-              height: 40
-            }}
-          >
-            {
-              this.props.read === false &&
-              <View style={{
-                position: 'absolute',
-                top: 0,
-                right: 0,
-                width: 8,
-                height: 8,
-                backgroundColor: 'red',
-                borderRadius: 4
-              }}></View>
-            }
-          </Image>
-          <View style={{
-            flex: 1,
-            marginLeft: 12
-          }}>
+export default function MessageItem (props) {
+  return (
+    <TouchableHighlight underlayColor={listUnderColor} onPress={props.onPress}>
+      <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingTop: 12,
+        paddingBottom: 12,
+        paddingLeft: 20,
+        paddingRight: 20,
+        backgroundColor: '#fff'
+      }}>
+        <Image
+          source={props.type === 0 && require('../assets/icons/SystemMessage.png')
+          || props.type === 1 && { uri: props.avatar }}
+          style={{
+            position: 'relative',
+            width: 40,
+            height: 40
+          }}
+        >
+          {
+            props.read === false &&
             <View style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center'
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              width: 8,
+              height: 8,
+              backgroundColor: 'red',
+              borderRadius: 4
+            }}></View>
+          }
+        </Image>
+        <View style={{
+          flex: 1,
+          marginLeft: 12
+        }}>
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <Text style={{
+              color: '#000',
+              fontSize: 16
             }}>
-              <Text style={{
-                color: '#000',
-                fontSize: 16
-              }}>{this.props.type === 0 && '系统通知'
-                || this.props.type === 1 && this.props.nickname}
-              </Text>
-              <Text style={{
-                color: '#8f8f8f'
-              }}>{this.props.date}</Text>
-            </View>
+              {
+                props.type === 0 && I18n.t('messages.systemNotification')
+                || props.type === 1 && props.nickname
+              }
+            </Text>
             <Text style={{
               color: '#8f8f8f'
-            }} numberOfLines={this.props.type === 0 && 1 || undefined}>{this.props.content}</Text>
+            }}>{props.date}</Text>
           </View>
+          <Text style={{
+            color: '#8f8f8f'
+          }} numberOfLines={props.type === 0 && 1 || undefined}>{props.content}</Text>
         </View>
-      </TouchableHighlight>
-    )
-  }
-  
+      </View>
+    </TouchableHighlight>
+  )
 }
 
 MessageItem.propTypes = {

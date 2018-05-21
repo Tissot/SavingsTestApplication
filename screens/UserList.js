@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 
 import {
   View,
@@ -13,7 +13,7 @@ import {
   CustomButton
 } from '../components'
 
-export default class UserList extends Component {
+export default class UserList extends PureComponent {
   constructor (props) {
     super(props)
 
@@ -33,7 +33,7 @@ export default class UserList extends Component {
     }
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.refresh()
   }
 
@@ -48,7 +48,10 @@ export default class UserList extends Component {
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => (
             <ListItem
-              onPress={() => this.props.navigation.navigate('SavingsSituations', { title: item.nickname, userId: item._id })}
+              onPress={() => this.props.navigation.navigate('SavingsSituations', {
+                title: item.nickname,
+                userId: item._id
+              })}
               itemIcon={item.avatar}
               iconSize={36}
               marginRight={112}
@@ -65,7 +68,7 @@ export default class UserList extends Component {
             }}>
                 <CustomButton
                   onPress={() => this.getUsers()}
-                  text='加载更多'
+                  text={this.$i18n.t('peerSavingsSituations.loadMore')}
                 />
             </View>
           ) : undefined}
@@ -74,24 +77,6 @@ export default class UserList extends Component {
         />
       </View>
     )
-  }
-
-  shouldComponentUpdate (newProps, newState) {
-    if (this.state.refreshing !== newState.refreshing) {
-      return true
-    }
-
-    if (this.state.users.length !== newState.users.length) {
-      return true
-    } else {
-      for (let i = 0; i < this.state.users.length; ++i) {
-        if (this.state.users[i]._id !== newState.users[i]._id) {
-          return true
-        }
-      }
-      
-      return false
-    }
   }
 
   async getUsers () {

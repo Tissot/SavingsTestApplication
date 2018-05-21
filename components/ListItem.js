@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React from 'react'
 import {
   TouchableHighlight,
   View,
@@ -11,58 +11,54 @@ import {
 
 import PropTypes from 'prop-types'
 
-export default class ListItem extends Component {
-  constructor (props) {
-    super(props)
-  }
+import { listUnderColor } from '../libs/Styles'
 
-  render () {
-    return (
-      <TouchableHighlight underlayColor={this.$listUnderColor} onPress={this.props.onPress}>
-        <View style={[
-          styles.listItemContainer,
-          this.props.itemValue !== undefined && { justifyContent: 'space-between' }
-        ]}>
-          <View style={styles.listItemIconKeyContainer}>
-            {
-              this.props.itemIcon !== undefined && <Image
-                source={typeof this.props.itemIcon === 'number' && this.props.itemIcon
-                || typeof this.props.itemIcon === 'string' && {uri: this.props.itemIcon}}
-                style={{
-                  marginLeft: 20,
-                  width: this.props.iconSize,
-                  height: this.props.iconSize
-                }}
-              />
-            }
-            <View style={{
-              marginLeft: this.props.itemIcon === undefined ? 20 : 12,
-              marginRight: this.props.itemValue === undefined ? this.props.marginRight : 20,
-              minHeight: this.props.iconSize,
-              justifyContent: 'center'
-            }}>
-              <Text numberOfLines={this.props.listItemKeyLines} style={styles.listItemKey}>{this.props.itemKey}</Text>
-            </View>
-          </View>
+export default function ListItem (props) {
+  return (
+    <TouchableHighlight underlayColor={listUnderColor} onPress={props.onPress}>
+      <View style={[
+        styles.listItemContainer,
+        props.itemValue !== undefined && { justifyContent: 'space-between' }
+      ]}>
+        <View style={styles.listItemIconKeyContainer}>
           {
-            this.props.itemValue !== undefined && (this.props.valueType === 'text' && <View style={{
-              justifyContent: 'center',
-              marginRight: this.props.marginRight
-            }}>
-              <Text style={styles.listItemValue}>{this.props.itemValue}</Text>
-            </View> || this.props.valueType === 'image' && <Image
-              source={{ uri: this.props.itemValue }}
+            props.itemIcon !== undefined && <Image
+              source={typeof props.itemIcon === 'number' && props.itemIcon
+              || typeof props.itemIcon === 'string' && {uri: props.itemIcon}}
               style={{
-                marginRight: 20,
-                width: 52,
-                height: 52
+                marginLeft: 20,
+                width: props.iconSize,
+                height: props.iconSize
               }}
-            />)
+            />
           }
+          <View style={{
+            marginLeft: props.itemIcon === undefined ? 20 : 12,
+            marginRight: props.itemValue === undefined ? props.marginRight : 20,
+            minHeight: props.iconSize,
+            justifyContent: 'center'
+          }}>
+            <Text numberOfLines={props.listItemKeyLines} style={styles.listItemKey}>{props.itemKey}</Text>
+          </View>
         </View>
-      </TouchableHighlight>
-    )
-  }
+        {
+          props.itemValue !== undefined && (props.valueType === 'text' && <View style={{
+            justifyContent: 'center',
+            marginRight: props.marginRight
+          }}>
+            <Text style={styles.listItemValue}>{props.itemValue}</Text>
+          </View> || props.valueType === 'image' && <Image
+            source={{ uri: props.itemValue }}
+            style={{
+              marginRight: 20,
+              width: 52,
+              height: 52
+            }}
+          />)
+        }
+      </View>
+    </TouchableHighlight>
+  )
 }
 
 ListItem.propTypes = {

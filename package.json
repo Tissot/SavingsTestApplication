@@ -1,6 +1,6 @@
 {
-	"name": "SavingsTestApplication",
-	"version": "0.0.1",
+	"name": "savings-test-application",
+	"version": "1.0.0",
 	"license": "gpl-3.0",
 	"scripts": {
 		"start": "node node_modules/react-native/local-cli/cli.js start",
@@ -12,6 +12,7 @@
 		"react": "16.0.0-alpha.6",
 		"react-native": "0.44.3",
 		"react-native-flexi-radio-button": "^0.2.1",
+		"react-native-i18n": "^2.0.12",
 		"react-native-image-crop-picker": "^0.17.2",
 		"react-native-storage": "^0.2.2",
 		"react-navigation": "^1.0.0-beta.11"
