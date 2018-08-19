@@ -19,6 +19,7 @@ import './libs/Axios.js'
 import './libs/Platform.js'
 import './libs/Storage.js'
 import './libs/Styles.js'
+import SimpleEventChannel from './libs/SimpleEventChannel.js'
 
 import {
   EditInfo,
@@ -244,7 +245,10 @@ export default class SavingsTestApplication extends PureComponent {
           locale,
           hasNewMessages,
           hasPassedTheExam,
-          toggleLocale: () => this.forceUpdate(),
+          toggleLocale: () => {
+            this.forceUpdate()
+            SimpleEventChannel.emit('toggleLocale')
+          },
           checkHasNewMessages: () => this.checkHasNewMessages(),
           getHasPassedTheExam: () => this.getHasPassedTheExam()
         }}

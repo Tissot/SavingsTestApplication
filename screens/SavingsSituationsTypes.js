@@ -6,6 +6,7 @@ import {
   SectionList
 } from 'react-native'
 
+import SimpleEventChannel from '../libs/SimpleEventChannel.js'
 import {
   NoPermissionToVisit,
   ListItem,
@@ -20,10 +21,13 @@ export default class SavingsSituationsTypes extends PureComponent {
       group: -1,
       savingsSituationsTypes: []
     }
+
+    this.refresh = this.refresh.bind(this)
   }
 
   componentDidMount () {
     this.props.screenProps.hasPassedTheExam === true && this.getSavingsSituationsTypes()
+    SimpleEventChannel.on('toggleLocale', this.refresh)
   }
   
   render () {
@@ -80,8 +84,8 @@ export default class SavingsSituationsTypes extends PureComponent {
     )
   }
 
-  componentWillReceiveProps (nextProps) {
-    this.refresh()
+  componentWillUnmount() {
+    SimpleEventChannel.off('toggleLocale', this.refresh)
   }
 
   refresh (response) {
